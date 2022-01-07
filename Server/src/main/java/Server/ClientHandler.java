@@ -1,5 +1,6 @@
 package Server;
 
+import javax.crypto.SealedObject;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -62,8 +63,8 @@ public class ClientHandler implements Runnable{
                 /* wait until an integer is sent from the client indicating how many objects will be sent */
                 Integer numObjects = in.readInt();
 
-                /* read the specified number of objects from the client */
-                for (int i = 0; i < numObjects; i++) { inMsgs.add( (String) in.readObject()); }
+                /* read and decrypt the specified number of objects from the client */
+                for (int i = 0; i < numObjects; i++) { inMsgs.add(encryption.Decrypt( (SealedObject) in.readObject()) ); }
 
 
 

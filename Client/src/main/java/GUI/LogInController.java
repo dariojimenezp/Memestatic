@@ -6,7 +6,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class CreateAccountController {
+public class LogInController {
 
     /** field where user enters the username **/
     @FXML
@@ -16,9 +16,9 @@ public class CreateAccountController {
     @FXML
     private PasswordField passwordField;
 
-    /** create account button **/
+    /** button that lets user log in **/
     @FXML
-    private Button createAccountButton;
+    private Button logInButton;
 
     /** username handlers **/
 
@@ -37,6 +37,7 @@ public class CreateAccountController {
     public void usernameMouseExited(){
         usernameField.setStyle("-fx-border-color: #2b2b2b");
     }
+
 
     /** password handlers **/
 
@@ -60,27 +61,28 @@ public class CreateAccountController {
     /** create account button handlers **/
 
     /** changes border color when mouse hovers the button **/
-    public void createAccountMouseEntered(){
-        createAccountButton.setStyle("-fx-background-color: #5040db");
+    public void logInMouseEntered(){
+        logInButton.setStyle("-fx-background-color: #5040db");
     }
 
     /** changes border color when mouse stops hovering the button **/
-    public void createAccountMouseExited(){
-        createAccountButton.setStyle("-fx-background-color: #5B49F5");
+    public void logInMouseExited(){
+        logInButton.setStyle("-fx-background-color: #5B49F5");
     }
 
-    public void createAccountHandler(){
+    public void logInHandler(){
     }
 
-    /** takes user to log in page and closes current page **/
-    public void logInHereHandler(){
+    /** Sends user to the create account page and closes current page **/
+    public void registerHereHandler(){
         closeStage();
-        GUI.logInPage();
+        GUI.createAccountPage();
     }
 
     /** closes current stage **/
-    public void closeStage(){
+    private void closeStage(){
         Stage stage = (Stage) usernameField.getScene().getWindow();
         stage.close();
     }
+
 }

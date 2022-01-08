@@ -13,11 +13,11 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="GUI.CreateAccountController"
+      fx:controller="GUI.LogInController"
       prefHeight="400.0" prefWidth="600.0">
 
     <!-- create account label -->
-    <Label text="Create Account" fx:id="createAccountLabel"></Label>
+    <Label text="Log In" fx:id="logInLabel"></Label>
 
     <Label text=""></Label>
     <Label text=""></Label>
@@ -29,7 +29,7 @@
         <Text fx:id="text" text="                            "></Text>
 
         <!-- Actual box where the field will be -->
-        <VBox fx:id="createAccountBox" >
+        <VBox fx:id="logInBox" >
 
             <!-- spacing to make box as big as desired and vertical padding -->
             <Text text="                                                                                                                         "></Text>
@@ -41,7 +41,7 @@
             <!-- username text field plus padding -->
             <HBox>
                 <Text text="           "></Text>
-                <TextField fx:id="usernameField" onMouseClicked="#usernameFieldClicked"
+                <TextField fx:id="usernameField" onMouseClicked="#usernameChangeBorderColor"
                            onMouseEntered="#usernameMouseEntered" onMouseExited="#usernameMouseExited" ></TextField>
             </HBox>
 
@@ -54,8 +54,8 @@
             <!-- password field and vertical padding -->
             <HBox>
                 <Text text="           "></Text>
-                <PasswordField fx:id="passwordField" alignment="CENTER" onMouseClicked="#passwordFieldClicked"
-                onMouseEntered="#passwordMouseEntered" onMouseExited="#passwordMouseExited"></PasswordField>
+                <PasswordField fx:id="passwordField" alignment="CENTER" onMouseClicked="#passwordChangeBorderColor"
+                               onMouseEntered="#passwordMouseEntered" onMouseExited="#passwordMouseExited"></PasswordField>
             </HBox>
 
             <!-- vertical padding -->
@@ -63,21 +63,20 @@
 
             <!-- Create Account Button -->
             <HBox>
-                <Text text="                       "></Text>
-                <Button fx:id="createAccountButton" text="Create Account" onMouseEntered="#createAccountMouseEntered"
-                        onMouseExited="#createAccountMouseExited" onAction="#createAccountHandler"></Button>
-                <Text text="                       "></Text>
+                <Text text="                                           "></Text>
+                <Button fx:id="logInButton" text="Log In" onMouseEntered="#logInMouseEntered"
+                        onMouseExited="#logInMouseExited" onAction="#logInHandler"></Button>
+                <Text text="                                           "></Text>
             </HBox>
 
-        <!-- "Already have an account? Log In Here!" -->
-        <HBox>
-            <Label fx:id="hasAccountLabel" text="   Already have an account?"></Label>
-            <Label fx:id="logInHereLabel" text="Log In Here!" onMouseClicked="#logInHereHandler"></Label>
-        </HBox>
+            <HBox>
+                <Label fx:id="noAccountLabel" text="        Don't have an account?"></Label>
+                <Label fx:id="registerHereLabel" text="Register here!" onMouseClicked="#registerHereHandler"></Label>
+            </HBox>
 
-    </VBox>
+        </VBox>
 
-    <!-- Right horizontal padding -->
+        <!-- Right horizontal padding -->
         <Text text="                            "></Text>
 
     </HBox>

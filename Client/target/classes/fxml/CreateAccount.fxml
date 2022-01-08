@@ -69,8 +69,10 @@
                 <Text text="                       "></Text>
             </HBox>
 
-            <!-- vertical padding -->
-            <Text></Text>
+            <HBox>
+                <Label fx:id="hasAccountLabel" text="   Already have an account?"></Label>
+                <Label fx:id="logInHereLabel" text="Log In Here!" onMouseClicked="#logInHereHandler"></Label>
+            </HBox>
         </VBox>
 
         <!-- Right horizontal padding -->

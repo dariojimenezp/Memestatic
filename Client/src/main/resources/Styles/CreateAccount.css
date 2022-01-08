@@ -1,35 +1,43 @@
+
+/** create account label **/
 #createAccountLabel{
     -fx-text-fill: white;
     -fx-font-family: "OCR A Extended";
     -fx-font-size: 50px;
 }
 
+/** root (main VBox) **/
 .root{
     -fx-background-color:  #5B49F5;
     -fx-alignment: center;
 }
 
+/** Hbox where the credentials go **/
 #credentialsField{
     -fx-alignment: center;
 }
+
+/** box where the text fields and buttons are located **/
 #createAccountBox{
     -fx-background-radius: 15px;
     -fx-background-color: #383838
 
 }
-
+/** username label **/
 #usernameLabel{
     -fx-text-fill: #dcddde;
     -fx-font-family: "OCR A Extended";
     -fx-font-size: 25px;
 }
 
+/** password label **/
 #passwordLabel{
     -fx-text-fill: #dcddde;
     -fx-font-family: "OCR A Extended";
     -fx-font-size: 25px;
 }
 
+/** text field for password **/
 #passwordField{
     -fx-min-width: 400px;
     -fx-min-height: 10px;
@@ -37,8 +45,11 @@
     -fx-background-color: #333332;
     -fx-border-color: #2b2b2b;
     -fx-text-fill: #dcddde;
+    -fx-background-radius: 7px;
+    -fx-border-radius: 7px;
 }
 
+/** text field for username **/
 #usernameField{
     -fx-min-width: 400px;
     -fx-min-height: 10px;
@@ -47,8 +58,11 @@
     -fx-border-color:  #2b2b2b;
     -fx-text-fill: #dcddde;
     -fx-alignment: center;
+    -fx-background-radius: 7px;
+    -fx-border-radius: 7px;
 }
 
+/** button to log in **/
 #createAccountButton{
     -fx-background-color:  #5B49F5;
     -fx-text-fill: white;
@@ -57,5 +71,20 @@
     -fx-alignment: center;
     -fx-background-radius: 35px;
     -fx-max-height: 40px;
+}
+
+/** "Already have an account?" label **/
+#hasAccountLabel{
+    -fx-padding: 10px;
+    -fx-text-fill: #dcddde;
+    -fx-font-size: 15px;
+}
+
+/** "log in here!" label **/
+#logInHereLabel{
+    -fx-padding: 10px;
+    -fx-text-fill: #5B49F5;
+    -fx-font-size: 15px;
+    -fx-underline: true;
 }
 

@@ -35,7 +35,8 @@ public class StartController {
      * Handler for log in button
      */
     public void logInHandler(){
-
+        closeStage();
+        GUI.logInPage();
     }
 
 
@@ -45,8 +46,13 @@ public class StartController {
      * Handler for create account button
      */
     public void createAccountHandler(){
+        closeStage();
+        GUI.createAccountPage();
+    }
+
+    /** closes current stage **/
+    private void closeStage(){
         Stage stage = (Stage) createAccountButton.getScene().getWindow();
         stage.close();
-        GUI.createAccountPage();
     }
 }

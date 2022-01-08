@@ -43,7 +43,7 @@ public class Server {
 
 
                 /* create and start a thread for client */
-                Thread t = new Thread(new ClientHandler(clientSocket, this));
+                Thread t = new Thread(new ClientHandler(clientSocket, this, db));
                 t.start();
 
                 /*indicate a connection with a client was established */

@@ -27,16 +27,20 @@ public class ClientHandler implements Runnable{
     /* server */
     private Server server;
 
+    /* database */
+    AtlasDB db;
+
     private LinkedList<String> inMsgs;
 
-    public ClientHandler(Socket socket, Server server) {
+    public ClientHandler(Socket socket, Server server, AtlasDB db) {
         this.socket = socket;
         this.server = server;
+        this.db = db;
         inMsgs = new LinkedList<String>();
 
         try {
-            in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
 
             /* check if public key matches */
             String publicKey = (String)in.readObject();
@@ -76,6 +80,39 @@ public class ClientHandler implements Runnable{
     }
 
     private void respond(LinkedList<String> msgs){
+        switch (msgs.pop()){
+
+            case "create account":
+                createAccount(msgs);
+                break;
+
+            default:
+                System.out.println("Invalid message");
+                return;
+        }
+    }
+
+    private void createAccount(LinkedList<String> msgs){
+
+        String username = msgs.pop();
+        String passwordHash = msgs.pop();
+
+        if(db.findDocument("Users", "username", username) != null){
+            try {
+                out.writeInt(1);
+                out.writeObject(encryption.Encrypt("account not created"));
+                return;
+            }
+            catch (IOException e) { e.printStackTrace(); }
+        }
+
+        db.addUser(username, passwordHash);
+
+        try {
+            out.writeInt(1);
+            out.writeObject(encryption.Encrypt("created account"));
+        }
+        catch (IOException e) { e.printStackTrace(); }
 
     }
 }

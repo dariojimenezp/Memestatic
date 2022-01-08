@@ -1,9 +1,13 @@
 package GUI;
 
+import Client.Main;
+import Hashing.Hashing;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class CreateAccountController {
@@ -19,6 +23,23 @@ public class CreateAccountController {
     /** create account button **/
     @FXML
     private Button createAccountButton;
+
+    /** username hbox **/
+    @FXML
+    private HBox usernameBox;
+
+    /** password hbox **/
+    @FXML
+    private HBox passwordBox;
+
+    /** username label **/
+    @FXML
+    private Label usernameLabel;
+
+    /** password label **/
+    @FXML
+    private Label passwordLabel;
+
 
     /** username handlers **/
 
@@ -70,6 +91,40 @@ public class CreateAccountController {
     }
 
     public void createAccountHandler(){
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        /* if username or password field are empty, return and indicate the user to fill them out */
+        if(username.isEmpty() || password.isEmpty()){
+            if(username.isEmpty()) {
+                Label warning = new Label("      please enter a username!");
+                warning.setId("warning");
+                usernameBox.getChildren().add(warning);
+                usernameLabel.setStyle("-fx-text-fill: #e81515");
+                usernameField.setStyle("-fx-border-color: #e81515");
+            }
+            if(password.isEmpty()){
+                Label warning = new Label("      please enter a password!");
+                warning.setId("warning");
+                passwordBox.getChildren().add(warning);
+                passwordLabel.setStyle("-fx-text-fill: #e81515");
+                passwordField.setStyle("-fx-border-color: #e81515");
+            }
+            return;
+        }
+
+        /* check if account was created successfully */
+        if(Main.client.wasAccountCreated(username, Hashing.PBKDF2Hash(password, 65000, 64))){
+            closeStage();
+        }
+        else{
+            Label warning = new Label("      username is already taken!");
+            warning.setId("warning");
+            usernameBox.getChildren().add(warning);
+            usernameLabel.setStyle("-fx-text-fill: #e81515");
+            usernameField.setStyle("-fx-border-color: #e81515");
+            return;
+        }
     }
 
     /** takes user to log in page and closes current page **/

@@ -33,8 +33,6 @@ public class AtlasDB {
     public AtlasDB(String connectionString, String database) throws DatabaseNotFoundException, CollectionNotFoundException {
 
         try {
-            /* set a 15-second timeout */
-            Thread.sleep(5000);
 
             /* create Connection string for database */
             ConnectionString cs = new ConnectionString(connectionString);
@@ -54,15 +52,11 @@ public class AtlasDB {
 
         String collection = null;
         try {
-            /* set a 15-second timeout */
-            Thread.sleep(15000);
 
             /* fetch the necessary collection and store them in hash map */
             collections = new HashMap<String, MongoCollection<Document>>();
             collection = "Users";
             collections.put("Users", db.getCollection("Users"));
-            collection = "Posts";
-            collections.put("Items", db.getCollection("Posts"));
 
         }catch (Exception e){
             throw new CollectionNotFoundException(collection, database, connectionString);
@@ -70,6 +64,12 @@ public class AtlasDB {
 
     }
 
+    /**
+     * gets all the documents from a collection
+     *
+     * @param collectionName the name of the collection
+     * @return a list of the all the documents in the colleciton
+     */
     public List<String> getAllDocuments(String collectionName){
 
         /* get collection from database */
@@ -89,6 +89,14 @@ public class AtlasDB {
         return list;
     }
 
+    /**
+     * finds a specific document from a collection
+     *
+     * @param collectionName name of the desired collection
+     * @param fieldName name of the document specific identifier
+     * @param value value of the identifier
+     * @return
+     */
     public String findDocument(String collectionName, String fieldName, String value){
 
         /* get collection from database */
@@ -107,6 +115,11 @@ public class AtlasDB {
         }
 
         else return null;
+    }
+
+    public void addUser(String username, String passwordHash){
+        Document user = new Document("username", username).append("passwordHash", passwordHash);
+        collections.get("Users").insertOne(user);
     }
 
 }

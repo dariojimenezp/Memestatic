@@ -88,3 +88,15 @@
     -fx-underline: true;
 }
 
+#noUsernameWarning{
+    -fx-text-fill: #e81515;
+    -fx-font-style: italic;
+    -fx-font-size: 20px;
+}
+
+#warning{
+    -fx-text-fill: #e81515;
+    -fx-font-style: italic;
+    -fx-font-size: 20px;
+}
+

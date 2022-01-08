@@ -1,6 +1,7 @@
 import Exceptions.CollectionNotFoundException;
 import Exceptions.DatabaseNotFoundException;
 import Server.AtlasDB;
+import Server.Server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,23 +15,14 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            ServerSocket serverSocket = new ServerSocket(3000);
+            Server server = new Server(3000, "mongodb+srv://dario_jimenezp:999@cluster0.v8i4y.mongodb.net/Memestatic?retryWrites=true&w=majority", "Memestatic");
+            server.fetchClients();
 
-            while (true){
-                Socket socket = serverSocket.accept();
-                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
-                int count = in.readInt();
-
-                for(int i=0; i<count; i++){
-                    System.out.println( (String) in.readObject());
-                }
-            }
-
-
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
+            e.printStackTrace();
+        } catch (CollectionNotFoundException e) {
             e.printStackTrace();
         }
+
     }
 }

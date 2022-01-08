@@ -41,7 +41,7 @@
             <!-- username text field plus padding -->
             <HBox>
                 <Text text="           "></Text>
-                <TextField fx:id="usernameField" onMouseClicked="#usernameChangeBorderColor"
+                <TextField fx:id="usernameField" onMouseClicked="#usernameFieldClicked"
                            onMouseEntered="#usernameMouseEntered" onMouseExited="#usernameMouseExited" ></TextField>
             </HBox>
 
@@ -54,7 +54,7 @@
             <!-- password field and vertical padding -->
             <HBox>
                 <Text text="           "></Text>
-                <PasswordField fx:id="passwordField" alignment="CENTER" onMouseClicked="#passwordChangeBorderColor"
+                <PasswordField fx:id="passwordField" alignment="CENTER" onMouseClicked="#passwordFieldClicked"
                                onMouseEntered="#passwordMouseEntered" onMouseExited="#passwordMouseExited"></PasswordField>
             </HBox>
 
@@ -69,6 +69,7 @@
                 <Text text="                                           "></Text>
             </HBox>
 
+            <!-- "Don't have an account? register here" label-->
             <HBox>
                 <Label fx:id="noAccountLabel" text="        Don't have an account?"></Label>
                 <Label fx:id="registerHereLabel" text="Register here!" onMouseClicked="#registerHereHandler"></Label>

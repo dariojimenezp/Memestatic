@@ -1,5 +1,6 @@
 package Client;
 
+import Exceptions.NoServerFoundException;
 import GUI.GUI;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -16,6 +17,8 @@ import GUI.StartController;
 
 public class Main extends Application {
 
+    public static Client client;
+
     public static void main(String[] args) {
        launch(args);
 
@@ -25,6 +28,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage){
+        try {
+            client = new Client("localhost", 3000);
+        } catch (NoServerFoundException e) {
+            e.printStackTrace();
+        }
         GUI.start();
         //StartController startController = new StartController(GUI.start());
     }

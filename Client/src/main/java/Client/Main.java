@@ -1,3 +1,5 @@
+package Client;
+
 import GUI.GUI;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -10,6 +12,8 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import GUI.StartController;
+
 public class Main extends Application {
 
     public static void main(String[] args) {
@@ -20,11 +24,8 @@ public class Main extends Application {
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        GUI gui = new GUI(primaryStage, null);
-        gui.start();
-
-
-
+    public void start(Stage primaryStage){
+        GUI.start();
+        //StartController startController = new StartController(GUI.start());
     }
 }

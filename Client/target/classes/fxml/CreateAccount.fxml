@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Box?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="GUI.CreateAccountController"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <!-- create account label -->
+    <Label text="Create Account" fx:id="createAccountLabel"></Label>
+
+    <Label text=""></Label>
+    <Label text=""></Label>
+
+    <!-- username and password field node -->
+    <HBox fx:id="credentialsField">
+
+        <!-- Left horizontal padding -->
+        <Text fx:id="text" text="                            "></Text>
+
+        <!-- Actual box where the field will be -->
+        <VBox fx:id="createAccountBox" >
+
+            <!-- spacing to make box as big as desired and vertical padding -->
+            <Text text="                                                                                                                         "></Text>
+            <Text></Text>
+
+            <!-- Username label + padding -->
+            <Label text="   Username" fx:id="usernameLabel"></Label>
+
+            <!-- username text field plus padding -->
+            <HBox>
+                <Text text="           "></Text>
+                <TextField fx:id="usernameField" onMouseClicked="#usernameChangeBorderColor"
+                           onMouseEntered="#usernameMouseEntered" onMouseExited="#usernameMouseExited" ></TextField>
+            </HBox>
+
+            <!-- vertical padding -->
+            <Text></Text>
+
+            <!-- password label -->
+            <Label text="   Password" fx:id="passwordLabel"></Label>
+
+            <!-- password field and vertical padding -->
+            <HBox>
+                <Text text="           "></Text>
+                <PasswordField fx:id="passwordField" alignment="CENTER" onMouseClicked="#passwordChangeBorderColor"
+                onMouseEntered="#passwordMouseEntered" onMouseExited="#passwordMouseExited"></PasswordField>
+            </HBox>
+
+            <!-- vertical padding -->
+            <Text></Text>
+
+            <!-- Create Account Button -->
+            <HBox>
+                <Text text="                       "></Text>
+                <Button fx:id="createAccountButton" text="Create Account" onMouseEntered="#createAccountMouseEntered"
+                        onMouseExited="#createAccountMouseExited" onAction="#createAccountHandler"></Button>
+                <Text text="                       "></Text>
+            </HBox>
+
+            <!-- vertical padding -->
+            <Text></Text>
+        </VBox>
+
+        <!-- Right horizontal padding -->
+        <Text text="                            "></Text>
+
+    </HBox>
+
+</VBox>

@@ -13,4 +13,15 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <dependecies>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx</artifactId>
+            <version>11</version>
+            <type>pom</type>
+        </dependency>
+
+    </dependecies>
+
 </project>

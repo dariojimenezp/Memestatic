@@ -36,7 +36,9 @@
             <Text></Text>
 
             <!-- Username label + padding -->
-            <Label text="   Username" fx:id="usernameLabel"></Label>
+            <HBox fx:id="usernameBox">
+                <Label text="   Username" fx:id="usernameLabel"></Label>
+            </HBox>
 
             <!-- username text field plus padding -->
             <HBox>
@@ -49,7 +51,9 @@
             <Text></Text>
 
             <!-- password label -->
-            <Label text="   Password" fx:id="passwordLabel"></Label>
+            <HBox fx:id="passwordBox">
+                <Label text="   Password" fx:id="passwordLabel"></Label>
+            </HBox>
 
             <!-- password field and vertical padding -->
             <HBox>

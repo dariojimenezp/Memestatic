@@ -71,6 +71,24 @@ public class Client {
         else return false;
     }
 
+    public Boolean logIn(String username, String password){
+
+        try {
+            out.writeInt(3);
+            out.writeObject(encryption.Encrypt("log in"));
+            out.writeObject(encryption.Encrypt(username));
+            out.writeObject(encryption.Encrypt(password));
+        }
+        catch (IOException e) { e.printStackTrace(); }
+
+        LinkedList msgs = receiveMsgs();
+
+        if(msgs.pop().equals("logged in")) return true;
+
+        else return false;
+
+    }
+
     /** receives messages from the server and stores them in a queue **/
     private LinkedList<String> receiveMsgs(){
 

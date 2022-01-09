@@ -5,7 +5,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.LinkedList;
+import ServerClientObjects.User;
+import com.google.gson.*;
+import Hashing.Hashing;
+
 
 public class ClientHandler implements Runnable{
 
@@ -28,7 +33,10 @@ public class ClientHandler implements Runnable{
     private Server server;
 
     /* database */
-    AtlasDB db;
+    private AtlasDB db;
+
+    private Gson gson;
+
 
     private LinkedList<String> inMsgs;
 
@@ -36,6 +44,7 @@ public class ClientHandler implements Runnable{
         this.socket = socket;
         this.server = server;
         this.db = db;
+        gson = new GsonBuilder().create();
         inMsgs = new LinkedList<String>();
 
         try {
@@ -72,7 +81,11 @@ public class ClientHandler implements Runnable{
 
 
 
-            } catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("Socket closed");
+                return;
+            }
+
 
             /* perform an action depending on received messages */
             respond(inMsgs);
@@ -84,6 +97,10 @@ public class ClientHandler implements Runnable{
 
             case "create account":
                 createAccount(msgs);
+                break;
+
+            case "log in":
+                logIn(msgs);
                 break;
 
             default:
@@ -113,6 +130,37 @@ public class ClientHandler implements Runnable{
             out.writeObject(encryption.Encrypt("created account"));
         }
         catch (IOException e) { e.printStackTrace(); }
+
+
+    }
+
+    private void logIn(LinkedList<String> msgs){
+
+        String username = msgs.pop();
+        String password = msgs.pop();
+
+        if(db.findDocument("Users", "username", username) == null || !validatePassword(username, password)) {
+            try {
+                out.writeInt(1);
+                out.writeObject(encryption.Encrypt("not logged in"));
+                return;
+            }
+            catch (IOException e) { e.printStackTrace(); }
+        }
+
+        try {
+            out.writeInt(1);
+            out.writeObject(encryption.Encrypt("logged in"));
+        }
+        catch (IOException e) { e.printStackTrace(); }
+    }
+
+    private Boolean validatePassword(String username, String password){
+
+        String userJSON = db.findDocument("Users", "username", username);
+        User user = gson.fromJson(userJSON, User.class);
+
+        return Hashing.PBKDF2HashMatch(password, user.getPasswordHash());
 
     }
 }

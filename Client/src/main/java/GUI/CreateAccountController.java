@@ -2,6 +2,7 @@ package GUI;
 
 import Client.Main;
 import Hashing.Hashing;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -97,34 +98,26 @@ public class CreateAccountController {
         /* if username or password field are empty, return and indicate the user to fill them out */
         if(username.isEmpty() || password.isEmpty()){
             if(username.isEmpty()) {
-                Label warning = new Label("      please enter a username!");
-                warning.setId("warning");
-                usernameBox.getChildren().add(warning);
-                usernameLabel.setStyle("-fx-text-fill: #e81515");
-                usernameField.setStyle("-fx-border-color: #e81515");
+                addWarning("      please enter a username!", usernameBox);
+                makeFieldRed(usernameField, usernameLabel);
             }
             if(password.isEmpty()){
-                Label warning = new Label("      please enter a password!");
-                warning.setId("warning");
-                passwordBox.getChildren().add(warning);
-                passwordLabel.setStyle("-fx-text-fill: #e81515");
-                passwordField.setStyle("-fx-border-color: #e81515");
-            }
+                addWarning("      please enter a password!", usernameBox);
+                makePasswordFieldRed(passwordField, passwordLabel);            }
             return;
         }
 
         /* check if account was created successfully */
         if(Main.client.wasAccountCreated(username, Hashing.PBKDF2Hash(password, 65000, 64))){
             closeStage();
-        }
-        else{
-            Label warning = new Label("      username is already taken!");
-            warning.setId("warning");
-            usernameBox.getChildren().add(warning);
-            usernameLabel.setStyle("-fx-text-fill: #e81515");
-            usernameField.setStyle("-fx-border-color: #e81515");
             return;
         }
+
+        /* not created sucessfully */
+        addWarning("      username is already taken!", usernameBox);
+        makeFieldRed(usernameField, usernameLabel);
+        makePasswordFieldRed(passwordField, passwordLabel);
+
     }
 
     /** takes user to log in page and closes current page **/
@@ -137,5 +130,24 @@ public class CreateAccountController {
     public void closeStage(){
         Stage stage = (Stage) usernameField.getScene().getWindow();
         stage.close();
+    }
+
+    /** add a warning on a credentials box field **/
+    private void addWarning(String message, HBox box){
+        Label warning = new Label(message);
+        warning.setId("warning");
+        if(box.getChildren().size() > 1) box.getChildren().remove(1);
+
+        box.getChildren().add(warning);
+    }
+
+    private void makeFieldRed(TextField field, Label label){
+        label.setStyle("-fx-text-fill: #e81515");
+        field.setStyle("-fx-border-color: #e81515");
+    }
+
+    private void makePasswordFieldRed(PasswordField field, Label label){
+        label.setStyle("-fx-text-fill: #e81515");
+        field.setStyle("-fx-border-color: #e81515");
     }
 }

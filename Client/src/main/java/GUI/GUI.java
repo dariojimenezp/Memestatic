@@ -26,7 +26,7 @@ public class GUI {
         createStage("LogIn");
     }
 
-    private static void createStage(String page){
+    private static Stage createStage(String page){
         /* load fxml file */
         Parent root = null;
         try {
@@ -43,6 +43,8 @@ public class GUI {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
+
+        return stage;
     }
 
 

@@ -1,9 +1,13 @@
 package GUI;
 
+import Client.Main;
+import Hashing.Hashing;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class LogInController {
@@ -19,6 +23,22 @@ public class LogInController {
     /** button that lets user log in **/
     @FXML
     private Button logInButton;
+
+    /** username hbox **/
+    @FXML
+    private HBox usernameBox;
+
+    /** password hbox **/
+    @FXML
+    private HBox passwordBox;
+
+    /** username label **/
+    @FXML
+    private Label usernameLabel;
+
+    /** password label **/
+    @FXML
+    private Label passwordLabel;
 
     /** username handlers **/
 
@@ -70,7 +90,38 @@ public class LogInController {
         logInButton.setStyle("-fx-background-color: #5B49F5");
     }
 
+
     public void logInHandler(){
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        /* if username or password field are empty, return and indicate the user to fill them out */
+        if(username.isEmpty() || password.isEmpty()){
+            if(username.isEmpty()) {
+                addWarning("      please enter a username!", usernameBox);
+                makeFieldRed(usernameField, usernameLabel);
+            }
+
+            if(password.isEmpty()){
+                addWarning("      please enter a password!", passwordBox);
+                makePasswordFieldRed(passwordField, passwordLabel);
+            }
+            return;
+        }
+
+        /* check if account if log in successful */
+        if(Main.client.logIn(username, password)){
+            closeStage();
+            System.out.println("Logged in");
+            return;
+        }
+
+        /* log in not successful */
+        addWarning("  username or password are incorrect", usernameBox);
+        addWarning("  username or password are incorrect", passwordBox);
+        makeFieldRed(usernameField, usernameLabel);
+        makePasswordFieldRed(passwordField, passwordLabel);
+
     }
 
     /** Sends user to the create account page and closes current page **/
@@ -83,6 +134,24 @@ public class LogInController {
     private void closeStage(){
         Stage stage = (Stage) usernameField.getScene().getWindow();
         stage.close();
+    }
+
+    private void addWarning(String message, HBox box){
+        Label warning = new Label(message);
+        warning.setId("warning");
+        if(box.getChildren().size() > 1) box.getChildren().remove(1);
+
+        box.getChildren().add(warning);
+    }
+
+    private void makeFieldRed(TextField field, Label label){
+        label.setStyle("-fx-text-fill: #e81515");
+        field.setStyle("-fx-border-color: #e81515");
+    }
+
+    private void makePasswordFieldRed(PasswordField field, Label label){
+        label.setStyle("-fx-text-fill: #e81515");
+        field.setStyle("-fx-border-color: #e81515");
     }
 
 }

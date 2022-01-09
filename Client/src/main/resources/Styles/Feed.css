@@ -1,0 +1,67 @@
+
+
+/* 'memestatic' label */
+#topBarLabels{
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-font-family: "OCR A Extended";
+}
+
+#topBarBox{
+    -fx-padding: 10px;
+    -fx-border-color: white;
+}
+
+.button{
+    -fx-background-radius: 35px;
+    -fx-text-fill: #5B49F5;
+    -fx-font-size: 15px;
+    -fx-font-family: "OCR A Extended";
+    -fx-max-width: 300px;
+    -fx-max-height: 30px;
+}
+
+#rootBox{
+    -fx-background-color: #5B49F5;
+    -fx-alignment: center;
+}
+#postBox{
+    -fx-background-color: #383838;
+    -fx-background-radius: 15px;
+}
+
+#postName{
+    -fx-text-fill: white;
+    -fx-font-family: "OCR A Extended";
+    -fx-font-size: 30px;
+}
+
+#username{
+    -fx-text-fill: white;
+    -fx-font-family: "OCR A Extended";
+    -fx-font-size: 15px;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+#commentLabel{
+    -fx-text-fill: white;
+    -fx-font-family: "OCR A Extended";
+    -fx-font-size: 25px;
+}
+
+#morePostsButton{
+    -fx-background-radius: 35px;
+    -fx-text-fill: #5B49F5;
+    -fx-font-size: 25px;
+    -fx-font-family: "OCR A Extended";
+}
+
+
+

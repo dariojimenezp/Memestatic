@@ -15,7 +15,7 @@ public class GUI {
 
 
     public static void start(){
-        createStage("Start");
+         createStage("Start");
     }
 
     public static void createAccountPage(){
@@ -30,19 +30,20 @@ public class GUI {
         /* load fxml file */
         Parent root = null;
         try {
-            root = FXMLLoader.load(GUI.class.getResource("../fxml/" + page + ".fxml"));
+            root = FXMLLoader.load(GUI.class.getResource("/fxml/" + page + ".fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         /* set up scene and add CSSs style sheet to it */
         Scene scene = new Scene(root, 1000, 800);
-        scene.getStylesheets().add(GUI.class.getResource("../Styles/" + page + ".css").toExternalForm());
+        scene.getStylesheets().add(GUI.class.getResource("/Styles/" + page + ".css").toExternalForm());
 
         /* set up the stage */
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
+
 
         return stage;
     }

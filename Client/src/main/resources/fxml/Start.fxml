@@ -22,7 +22,7 @@
     <!-- Logo Image -->
     <ImageView fx:id="logo" >
         <image>
-            <Image url="@../Images/Logo2.png"/>
+            <Image url="@../../../../target/classes/Images/LogoOnly.png"/>
         </image>
     </ImageView>
 

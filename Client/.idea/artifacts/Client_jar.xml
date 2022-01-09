@@ -8,9 +8,9 @@
       <element id="module-output" name="Client" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../Java-Encryption-Library/Java-Encryption-Library/Java-Encryption-Library.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../Java-Hashing-Library/Java-Hashing-Library/Java-Hashing-Library.jar" path-in-jar="/" />
-      <element id="directory" name="Images">
-        <element id="file-copy" path="$PROJECT_DIR$/target/classes/Images/Logo.png" />
-      </element>
+      <element id="dir-copy" path="$PROJECT_DIR$/target/classes/Images" />
+      <element id="dir-copy" path="$PROJECT_DIR$/target/classes/Styles" />
+      <element id="dir-copy" path="$PROJECT_DIR$/target/classes/fxml" />
     </root>
   </artifact>
 </component>

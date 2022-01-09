@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Client:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Client_jar</output-path>
+    <root id="archive" name="Client.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Client" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../Java-Encryption-Library/Java-Encryption-Library/Java-Encryption-Library.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../Java-Hashing-Library/Java-Hashing-Library/Java-Hashing-Library.jar" path-in-jar="/" />
+      <element id="directory" name="Images">
+        <element id="file-copy" path="$PROJECT_DIR$/target/classes/Images/Logo.png" />
+      </element>
+    </root>
+  </artifact>
+</component>

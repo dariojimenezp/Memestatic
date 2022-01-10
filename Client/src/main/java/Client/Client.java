@@ -6,11 +6,14 @@ import Exceptions.NoServerFoundException;
 
 import javax.crypto.SealedObject;
 import javax.crypto.SecretKey;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import Encryption.Encryption;
@@ -32,8 +35,11 @@ public class Client {
     /* encryption for messages */
     private Encryption encryption;
 
+    private HashSet<String> downloadedImagesSet;
+
     public Client(String IP_ADDRESS, Integer PORT) throws NoServerFoundException {
 
+        downloadedImagesSet = new HashSet<String>();
         try {
             /* connect to server socket a establish output and input streams */
             socket = new Socket(IP_ADDRESS, PORT);
@@ -121,7 +127,8 @@ public class Client {
             out.writeObject(encryption.Encrypt(ImageExplorer.getImageType(path)));
 
             /*receive the image id and download image to src folder */
-            ImageExplorer.downloadImage(encryption.Decrypt( (SealedObject) in.readObject(), String.class), ImageExplorer.getImageType(path), post.getImageArray(), ImageExplorer.Project.CLIENT);
+            String imageID = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+            ImageExplorer.downloadImage(imageID, ImageExplorer.getImageType(path), post.getImageArray(), ImageExplorer.Project.CLIENT);
         }
         catch (IOException | ClassNotFoundException e) { e.printStackTrace();}
 
@@ -142,5 +149,20 @@ public class Client {
         catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
         return posts;
+    }
+
+    public void downloadImages(ArrayList<Post> posts){
+
+        File directory = new File("target\\classes\\Images");
+        String[] downloadedImages = directory.list();
+
+        for (int i = 0; i < downloadedImages.length; i++) {
+            if(!downloadedImagesSet.contains(downloadedImages[i])) downloadedImagesSet.add(downloadedImages[i]);
+        }
+
+        for(Post post: posts){
+            if(!downloadedImagesSet.contains(post.getImgName())) ImageExplorer.downloadImage(post.getItemID(), ImageExplorer.getImageType(post.getImgName()), post.getImageArray(), ImageExplorer.Project.CLIENT);
+        }
+
     }
 }

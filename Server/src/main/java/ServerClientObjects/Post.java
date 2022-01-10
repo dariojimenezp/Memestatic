@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Post implements Serializable {
 
     /* post's unique imageID */
-    private String imageID;
+    private String itemID;
 
     /* post info */
     private String postName;
@@ -70,6 +70,9 @@ public class Post implements Serializable {
         return imageArray;
     }
 
+    public String getItemID() {
+        return itemID;
+    }
 
     /** setters **/
     public void setImgName(String imgName) {
@@ -79,4 +82,6 @@ public class Post implements Serializable {
     public void setImageArray(byte[] imageArray) {
         this.imageArray = imageArray;
     }
+
+
 }

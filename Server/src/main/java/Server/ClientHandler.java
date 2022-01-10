@@ -60,7 +60,7 @@ public class ClientHandler implements Runnable{
         this.db = db;
         gson = new GsonBuilder().create();
         inMsgs = new LinkedList<String>();
-        postIndex = 5;
+        postIndex = 0;
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -244,12 +244,21 @@ public class ClientHandler implements Runnable{
         /* get all posts */
         posts = db.getAllDocuments("Posts");
 
-        /* put all posts into postsArray and put the imageArray into it */
-        for (int i = 0; i < postIndex; i++) {
-            postsArray.add(gson.fromJson(posts.get(i), Post.class));
-            byte[] imageArray = ImageExplorer.convertImageToByteArray("src\\main\\resources\\Images\\" + postsArray.get(i).getImgName(), ImageExplorer.getImageType(postsArray.get(i).getImgName()));
-            postsArray.get(i).setImageArray(imageArray);
-            if(posts.size()-1 == i) break;
+        if(posts.size() > postIndex) {
+            /* put all posts into postsArray and put the imageArray into it */
+            for (int i = postIndex; i < postIndex + 5; i++) {
+
+                /* get and update post */
+                Post post = gson.fromJson(posts.get(i), Post.class);
+                byte[] imageArray = ImageExplorer.convertImageToByteArray("src\\main\\resources\\Images\\" + post.getImgName(), ImageExplorer.getImageType(post.getImgName()));
+                post.setImageArray(imageArray);
+
+                /* add post to array */
+                postsArray.add(post);
+
+                /* check if this is the last post */
+                if (posts.size() - 1 == i) break;
+            }
         }
 
         /* increment index for the next time more posts need to be fetched */

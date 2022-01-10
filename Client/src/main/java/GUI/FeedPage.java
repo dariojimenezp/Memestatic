@@ -1,5 +1,7 @@
 package GUI;
 
+import Client.Main;
+import ServerClientObjects.Post;
 import ServerClientObjects.User;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 //TODO: add actual post information
 
@@ -45,7 +49,8 @@ public class FeedPage {
         verticalPadding(root);
 
         /* add posts */
-        addPosts(root);
+        ArrayList<Post> posts = Main.client.getPosts();
+        addPosts(root, posts);
 
         /* button to add more posts */
         Button morePostsButton = new Button("See more Posts");
@@ -54,7 +59,19 @@ public class FeedPage {
         /* more posts handler */
         morePostsButton.setOnAction(event -> {
             root.getChildren().remove(morePostsButton);
-            addPosts(root);
+
+            ArrayList<Post> morePosts = Main.client.getPosts();
+
+            /* if no more posts, add no more posts label */
+            if(morePosts.isEmpty()){
+                Label noMorePostsLabel = new Label("There are no more posts! :(");
+                noMorePostsLabel.setId("topBarLabels");
+                root.getChildren().addAll(noMorePostsLabel, new Text(""));
+                return;
+            }
+
+            /* if there are more posts available, add them to feed page */
+            addPosts(root, morePosts);
             root.getChildren().add(morePostsButton);
 
         });
@@ -139,18 +156,18 @@ public class FeedPage {
                 "                                   ");
     }
 
-    private HBox post(){
+    private HBox post(Post post){
 
         /* root */
         VBox postBox = new VBox();
         postBox.setId("postBox");
 
         /* post name */
-        Label postName = new Label("   Post Name");
+        Label postName = new Label("   " + post.getPostName());
         postName.setId("postName");
 
         /* rating */
-        Label rating = new Label("9.5/10");
+        Label rating = new Label(post.getRating() == null ? "no ratings" : "        " + post.getRating() + "/10");
         rating.setId("postName");
 
         /* post name + rating box */
@@ -160,10 +177,10 @@ public class FeedPage {
                 rating);
 
         /* username of who posted it */
-        Label username = new Label("       by username");
+        Label username = new Label("       " + post.getPostUser());
         username.setId("username");
 
-        postBox.getChildren().addAll(postBoxPadding(), postNameBox, username, new Text(""), memeImage("img_0001.jpg"),
+        postBox.getChildren().addAll(postBoxPadding(), postNameBox, username, new Text(""), memeImage(post.getImgName()),
                 new Text(""), commentImage());
 
         HBox root = new HBox();
@@ -222,10 +239,10 @@ public class FeedPage {
         return box;
     }
 
-    private void addPosts(VBox root){
+    private void addPosts(VBox root, ArrayList<Post> posts){
 
-        for(int i=0; i<MEME_LIMIT; i++){
-            root.getChildren().addAll(post(), new Text(""));
+        for(int i=0; i< posts.size(); i++){
+            root.getChildren().addAll(post(posts.get(i)), new Text(""));
         }
 
     }

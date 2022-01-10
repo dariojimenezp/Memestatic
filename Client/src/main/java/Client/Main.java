@@ -1,5 +1,6 @@
 package Client;
 
+import GUI.FeedPage;
 import GUI.ImageExplorer;
 import ServerClientObjects.Post;
 import Exceptions.NoServerFoundException;
@@ -32,11 +33,24 @@ public class Main extends Application {
             e.printStackTrace();
         }
         //GUI.start();
-        //new FeedPage(null);
+        new FeedPage(null);
         //client.getPosts();
 
-        ArrayList<Post> posts = client.getPosts();
-        client.downloadImages(posts);
+        //ArrayList<Post> posts = client.getPosts();
+        //client.downloadImages(posts);
 
+        /*
+        String path = ImageExplorer.getPath();
+        Post post = new Post("It feel like forever", "spooderman", ImageExplorer.convertImageToByteArray(path, ImageExplorer.getImageType(path)));
+        client.publishPost(post, path);
+
+        path = ImageExplorer.getPath();
+        post = new Post("Seems fun", "spooderman", ImageExplorer.convertImageToByteArray(path, ImageExplorer.getImageType(path)));
+        client.publishPost(post, path);
+
+        path = ImageExplorer.getPath();
+        post = new Post("pineapple on pizza??", "spooderman", ImageExplorer.convertImageToByteArray(path, ImageExplorer.getImageType(path)));
+        client.publishPost(post, path);
+        */
     }
 }

@@ -148,10 +148,11 @@ public class Client {
 
         catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
+        downloadImages(posts);
         return posts;
     }
 
-    public void downloadImages(ArrayList<Post> posts){
+    private void downloadImages(ArrayList<Post> posts){
 
         File directory = new File("target\\classes\\Images");
         String[] downloadedImages = directory.list();

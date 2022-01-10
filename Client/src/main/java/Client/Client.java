@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import Encryption.Encryption;
@@ -110,8 +111,6 @@ public class Client {
 
     public void publishPost(Post post, String path){
 
-        /* get image array to send to server and download to image folder in src files */
-        byte[] imgArray = ImageExplorer.convertImageToByteArray(path, ImageExplorer.getImageType(path));
 
         try {
 
@@ -119,15 +118,29 @@ public class Client {
             out.writeInt(4);
             out.writeObject( encryption.Encrypt("post"));
             out.writeObject(encryption.Encrypt(post));
-            out.writeObject(encryption.Encrypt(imgArray));
             out.writeObject(encryption.Encrypt(ImageExplorer.getImageType(path)));
 
             /*receive the image id and download image to src folder */
-            ImageExplorer.downloadImage(encryption.Decrypt( (SealedObject) in.readObject(), String.class), ImageExplorer.getImageType(path), imgArray, ImageExplorer.Project.CLIENT);
+            ImageExplorer.downloadImage(encryption.Decrypt( (SealedObject) in.readObject(), String.class), ImageExplorer.getImageType(path), post.getImageArray(), ImageExplorer.Project.CLIENT);
         }
         catch (IOException | ClassNotFoundException e) { e.printStackTrace();}
 
+    }
 
+    public ArrayList<Post> getPosts(){
 
+        ArrayList<Post> posts = new ArrayList<Post>();
+        try {
+            /* ask for posts */
+            out.writeInt(1);
+            out.writeObject(encryption.Encrypt("get posts"));
+
+            /* get posts */
+            posts = encryption.Decrypt( (SealedObject) in.readObject(), ArrayList.class);
+        }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+        return posts;
     }
 }

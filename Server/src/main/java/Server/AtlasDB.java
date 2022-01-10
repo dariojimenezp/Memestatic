@@ -27,7 +27,7 @@ public class AtlasDB {
 
     private MongoDatabase db;
     private HashMap<String, MongoCollection<Document>> collections;
-    private String IMAGE_ID = "61dba1617014788fb8ab3fcd";
+    private String IMAGE_ID = "61dbda1c7014788fb8ab3fce";
 
     /**
      * Consructor
@@ -63,6 +63,8 @@ public class AtlasDB {
             collections.put("Users", db.getCollection("Users"));
             collection = "Posts";
             collections.put(collection, db.getCollection("Posts"));
+            collection = "ImageID";
+            collections.put(collection, db.getCollection("ImageID"));
 
 
         }catch (Exception e){
@@ -130,10 +132,12 @@ public class AtlasDB {
         collections.get("Users").insertOne(user);
     }
 
-    public void addPost(Post post){
+    public void addPost(Post post, String id){
         Document postDocument = new Document("postName", post.getPostName()).append("postUser", post.getPostUser())
-                .append("imgName", post.getImgName());
+                .append("imgName", post.getImgName()).append("itemID", id);
+
         collections.get("Posts").insertOne(postDocument);
+
     }
 
     public void addComment(String post, String comment){
@@ -143,11 +147,11 @@ public class AtlasDB {
 
     public String getImageID(){
         /* get imageID */
-        String doc = findDocument("Posts", "_id", IMAGE_ID);
+        String doc = findDocument("ImageID", "_id", IMAGE_ID);
         Integer id = new GsonBuilder().create().fromJson(doc, ImageID.class).getImageID();
 
         /* increment and update imageID */
-        collections.get("Posts").updateOne( eq("_id", new ObjectId(IMAGE_ID)), new Document("$set", new Document("imageID", id+1)));
+        collections.get("ImageID").updateOne( eq("_id", new ObjectId(IMAGE_ID)), new Document("$set", new Document("imageID", id+1)));
 
         return String.valueOf(id);
     }

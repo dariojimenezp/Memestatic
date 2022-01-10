@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -31,8 +32,13 @@ public class Main extends Application {
         }
         //GUI.start();
         //new FeedPage(null);
-        Post post = new Post("test1", "dario_jimenezp0107");
-        client.publishPost(post, ImageExplorer.getPath());
+        //client.getPosts();
+
+        String path = ImageExplorer.getPath();
+        Post p = new Post("smort", "djp", ImageExplorer.convertImageToByteArray(path, ImageExplorer.getImageType(path)));
+        client.publishPost(p, path);
+        ArrayList<Post> posts = client.getPosts();
+        System.out.println("L");
 
 
     }

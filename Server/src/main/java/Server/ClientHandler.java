@@ -6,7 +6,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import ServerClientObjects.ImageExplorer;
 import ServerClientObjects.Post;
@@ -14,6 +16,7 @@ import ServerClientObjects.User;
 import com.google.gson.*;
 import Hashing.Hashing;
 import Encryption.Encryption;
+import org.bson.Document;
 
 
 public class ClientHandler implements Runnable{
@@ -42,6 +45,12 @@ public class ClientHandler implements Runnable{
 
     private Gson gson;
 
+    /* post index */
+    private int postIndex;
+
+    /* posts */
+    private List<String> posts;
+
 
     private LinkedList<String> inMsgs;
 
@@ -51,6 +60,7 @@ public class ClientHandler implements Runnable{
         this.db = db;
         gson = new GsonBuilder().create();
         inMsgs = new LinkedList<String>();
+        postIndex = 5;
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -84,8 +94,6 @@ public class ClientHandler implements Runnable{
                 /* perform an action depending on received messages */
                 respond(numObjects);
 
-
-
             } catch (IOException e) {
                 System.out.println("Socket closed");
                 return;
@@ -115,6 +123,10 @@ public class ClientHandler implements Runnable{
 
             case "post":
                 post();
+                break;
+
+            case "get posts":
+                sendPosts();
                 break;
 
             default:
@@ -199,35 +211,55 @@ public class ClientHandler implements Runnable{
         /* add post */
         Post post = null;
 
-        try {
-            post = encryption.Decrypt( (SealedObject) in.readObject(), Post.class);
-            post.setImgName("img_" + id);
-            db.addPost(post);
-
-        }
-
-        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
-
-
         /* get image array to download it */
         byte[] imgArray = null;
+
+        /* image type */
         String imgType = null;
+
         try {
-            imgArray = encryption.Decrypt( (SealedObject) in.readObject(), byte[].class );
+            post = encryption.Decrypt( (SealedObject) in.readObject(), Post.class);
             imgType = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+            post.setImgName("img_" + id + "." + imgType);
+
+            db.addPost(post, id);
         }
 
         catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
         /* download image */
-        ImageExplorer.downloadImage(id, imgType, imgArray, ImageExplorer.Project.SERVER);
+        ImageExplorer.downloadImage(id, imgType, post.getImageArray(), ImageExplorer.Project.SERVER);
 
         /* send imageID */
         try { out.writeObject(encryption.Encrypt(id)); }
 
         catch (IOException e) { e.printStackTrace(); }
 
-
     }
+
+    private void sendPosts(){
+
+        ArrayList<Post> postsArray = new ArrayList<Post>();
+
+        /* get all posts */
+        posts = db.getAllDocuments("Posts");
+
+        /* put all posts into postsArray and put the imageArray into it */
+        for (int i = 0; i < postIndex; i++) {
+            postsArray.add(gson.fromJson(posts.get(i), Post.class));
+            byte[] imageArray = ImageExplorer.convertImageToByteArray("src\\main\\resources\\Images\\" + postsArray.get(i).getImgName(), ImageExplorer.getImageType(postsArray.get(i).getImgName()));
+            postsArray.get(i).setImageArray(imageArray);
+            if(posts.size()-1 == i) break;
+        }
+
+        /* increment index for the next time more posts need to be fetched */
+        postIndex += 5;
+
+        /* send the list of posts to client */
+        try { out.writeObject(encryption.Encrypt(postsArray)); }
+
+        catch (IOException e) { e.printStackTrace(); }
+    }
+
 
 }

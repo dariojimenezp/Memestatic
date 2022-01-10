@@ -34,7 +34,7 @@ public class ImageExplorer {
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageArray));
             if(project == Project.SERVER) ImageIO.write(image, imageType, new File("src\\main\\resources\\Images\\img_" + imageID + "." + imageType));
 
-            else ImageIO.write(image, imageType, new File(String.valueOf(ImageExplorer.class.getResource("img_" + imageID + "." + imageType))));
+            else ImageIO.write(image, imageType, new File("target\\classes\\Images\\img_" + imageID + "." + imageType));
 
 
         }catch (IOException e){

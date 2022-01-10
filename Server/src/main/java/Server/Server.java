@@ -2,6 +2,7 @@ package Server;
 
 import Exceptions.CollectionNotFoundException;
 import Exceptions.DatabaseNotFoundException;
+import ServerClientObjects.Post;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -27,6 +28,7 @@ public class Server {
         this.PORT = PORT;
 
         db = new AtlasDB(dbConnectionString, dbName);
+
     }
 
 

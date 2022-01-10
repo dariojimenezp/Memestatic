@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 public class Post implements Serializable {
 
+    /* post's unique imageID */
+    private String imageID;
+
     /* post info */
     private String postName;
     private String postUser;
@@ -20,9 +23,12 @@ public class Post implements Serializable {
     /* image */
     private String imgName;
 
-    public Post(String postName, String postUser) {
+    private byte[] imageArray;
+
+    public Post(String postName, String postUser, byte[] imageArray) {
         this.postName = postName;
         this.postUser = postUser;
+        this.imageArray = imageArray;
         ratingSum = 0.0;
         totalRatings = 0;
         rating = 0.0;
@@ -60,7 +66,17 @@ public class Post implements Serializable {
         return imgName;
     }
 
+    public byte[] getImageArray() {
+        return imageArray;
+    }
+
+
+    /** setters **/
     public void setImgName(String imgName) {
         this.imgName = imgName;
+    }
+
+    public void setImageArray(byte[] imageArray) {
+        this.imageArray = imageArray;
     }
 }

@@ -1,9 +1,6 @@
-package ClientServerObjects;
+package ServerClientObjects;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import Hashing.Hashing;
 
 public class User {
 

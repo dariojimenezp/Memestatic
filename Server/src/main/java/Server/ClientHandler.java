@@ -7,9 +7,13 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.LinkedList;
+
+import ServerClientObjects.ImageExplorer;
+import ServerClientObjects.Post;
 import ServerClientObjects.User;
 import com.google.gson.*;
 import Hashing.Hashing;
+import Encryption.Encryption;
 
 
 public class ClientHandler implements Runnable{
@@ -18,6 +22,7 @@ public class ClientHandler implements Runnable{
 
     /* encryption public key */
     private String PUBLIC_KEY = "dy1k82p08wm";
+
 
     /* socket streams */
     private ObjectOutputStream out;
@@ -76,31 +81,40 @@ public class ClientHandler implements Runnable{
                 /* wait until an integer is sent from the client indicating how many objects will be sent */
                 Integer numObjects = in.readInt();
 
-                /* read and decrypt the specified number of objects from the client */
-                for (int i = 0; i < numObjects; i++) { inMsgs.add(encryption.Decrypt( (SealedObject) in.readObject()) ); }
+                /* perform an action depending on received messages */
+                respond(numObjects);
 
 
 
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException e) {
                 System.out.println("Socket closed");
                 return;
             }
 
-
-            /* perform an action depending on received messages */
-            respond(inMsgs);
         }
     }
 
-    private void respond(LinkedList<String> msgs){
-        switch (msgs.pop()){
+    private void respond(Integer numObjects){
+
+        String action = null;
+        try {
+            action = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+        }
+
+        catch (IOException | ClassNotFoundException e ) {  e.printStackTrace(); }
+        switch (action){
 
             case "create account":
-                createAccount(msgs);
+
+                createAccount(getStrings(numObjects));
                 break;
 
             case "log in":
-                logIn(msgs);
+                logIn(getStrings(numObjects));
+                break;
+
+            case "post":
+                post();
                 break;
 
             default:
@@ -131,7 +145,20 @@ public class ClientHandler implements Runnable{
         }
         catch (IOException e) { e.printStackTrace(); }
 
+    }
 
+    private LinkedList<String> getStrings(Integer numObjects){
+
+        LinkedList<String> strings = new LinkedList<String>();
+
+        for (int i = 0; i < numObjects; i++) {
+
+            try {strings.add(encryption.Decrypt( (SealedObject)in.readObject(), String.class));}
+
+            catch (IOException | ClassNotFoundException e) { e.printStackTrace();}
+        }
+
+        return strings;
     }
 
     private void logIn(LinkedList<String> msgs){
@@ -163,4 +190,44 @@ public class ClientHandler implements Runnable{
         return Hashing.PBKDF2HashMatch(password, user.getPasswordHash());
 
     }
+
+    private void post(){
+
+        /* get image ID */
+        String id = db.getImageID();
+
+        /* add post */
+        Post post = null;
+
+        try {
+            post = encryption.Decrypt( (SealedObject) in.readObject(), Post.class);
+            post.setImgName("img_" + id);
+            db.addPost(post);
+
+        }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+
+        /* get image array to download it */
+        byte[] imgArray = null;
+        String imgType = null;
+        try {
+            imgArray = encryption.Decrypt( (SealedObject) in.readObject(), byte[].class );
+            imgType = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+        }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+        /* download image */
+        ImageExplorer.downloadImage(id, imgType, imgArray, ImageExplorer.Project.SERVER);
+
+        /* send imageID */
+        try { out.writeObject(encryption.Encrypt(id)); }
+
+        catch (IOException e) { e.printStackTrace(); }
+
+
+    }
+
 }

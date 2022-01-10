@@ -2,6 +2,8 @@ package Server;
 
 import Exceptions.CollectionNotFoundException;
 import Exceptions.DatabaseNotFoundException;
+import ServerClientObjects.Post;
+import com.google.gson.GsonBuilder;
 import com.mongodb.*;
 import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.FindIterable;
@@ -12,6 +14,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Indexes;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,6 +27,7 @@ public class AtlasDB {
 
     private MongoDatabase db;
     private HashMap<String, MongoCollection<Document>> collections;
+    private String IMAGE_ID = "61dba1617014788fb8ab3fcd";
 
     /**
      * Consructor
@@ -57,6 +61,9 @@ public class AtlasDB {
             collections = new HashMap<String, MongoCollection<Document>>();
             collection = "Users";
             collections.put("Users", db.getCollection("Users"));
+            collection = "Posts";
+            collections.put(collection, db.getCollection("Posts"));
+
 
         }catch (Exception e){
             throw new CollectionNotFoundException(collection, database, connectionString);
@@ -105,7 +112,8 @@ public class AtlasDB {
 
         /* find document */
         FindIterable<Document> document = null;
-        if(fieldName.equals("itemID")) document = collection.find(eq(fieldName, Integer.valueOf(value)));
+        if(fieldName.equals("_id")) document = collection.find(eq(fieldName, new ObjectId(value)));
+
 
         else document = collection.find(eq(fieldName, value));
         Iterator<Document> iterator = document.iterator();
@@ -120,6 +128,28 @@ public class AtlasDB {
     public void addUser(String username, String passwordHash){
         Document user = new Document("username", username).append("passwordHash", passwordHash);
         collections.get("Users").insertOne(user);
+    }
+
+    public void addPost(Post post){
+        Document postDocument = new Document("postName", post.getPostName()).append("postUser", post.getPostUser())
+                .append("imgName", post.getImgName());
+        collections.get("Posts").insertOne(postDocument);
+    }
+
+    public void addComment(String post, String comment){
+
+        //collections.get("Post").updateOne( eq("postName"))
+    }
+
+    public String getImageID(){
+        /* get imageID */
+        String doc = findDocument("Posts", "_id", IMAGE_ID);
+        Integer id = new GsonBuilder().create().fromJson(doc, ImageID.class).getImageID();
+
+        /* increment and update imageID */
+        collections.get("Posts").updateOne( eq("_id", new ObjectId(IMAGE_ID)), new Document("$set", new Document("imageID", id+1)));
+
+        return String.valueOf(id);
     }
 
 }

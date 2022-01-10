@@ -1,27 +1,21 @@
 package GUI;
 
-import ClientServerObjects.User;
-import javafx.geometry.Orientation;
+import ServerClientObjects.User;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
 
 //TODO: add actual post information
 
@@ -51,9 +45,7 @@ public class FeedPage {
         verticalPadding(root);
 
         /* add posts */
-        for(int i=0; i<MEME_LIMIT; i++){
-            root.getChildren().addAll(post(), new Text(""));
-        }
+        addPosts(root);
 
         /* button to add more posts */
         Button morePostsButton = new Button("See more Posts");
@@ -61,7 +53,10 @@ public class FeedPage {
 
         /* more posts handler */
         morePostsButton.setOnAction(event -> {
-            //TODO
+            root.getChildren().remove(morePostsButton);
+            addPosts(root);
+            root.getChildren().add(morePostsButton);
+
         });
 
         /* add button to root */
@@ -225,6 +220,14 @@ public class FeedPage {
 
         commentBox.setOnMouseExited(event -> commentBox.setStyle("-fx-background-color: #383838"));
         return box;
+    }
+
+    private void addPosts(VBox root){
+
+        for(int i=0; i<MEME_LIMIT; i++){
+            root.getChildren().addAll(post(), new Text(""));
+        }
+
     }
 
     private void verticalPadding(VBox root){

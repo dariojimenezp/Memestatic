@@ -1,5 +1,7 @@
 package Client;
 
+import GUI.ImageExplorer;
+import ServerClientObjects.Post;
 import Exceptions.NoServerFoundException;
 
 import javax.crypto.SealedObject;
@@ -11,7 +13,6 @@ import java.net.Socket;
 import java.util.LinkedList;
 
 import Encryption.Encryption;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 public class Client {
 
@@ -99,11 +100,34 @@ public class Client {
             int numMsgs = in.readInt();
 
             for (int i = 0; i < numMsgs; i++) {
-                msgs.add(encryption.Decrypt( (SealedObject) in.readObject()));
+                msgs.add(encryption.Decrypt( (SealedObject) in.readObject(), String.class));
             }
         }
         catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
         return msgs;
+    }
+
+    public void publishPost(Post post, String path){
+
+        /* get image array to send to server and download to image folder in src files */
+        byte[] imgArray = ImageExplorer.convertImageToByteArray(path, ImageExplorer.getImageType(path));
+
+        try {
+
+            /* send the data */
+            out.writeInt(4);
+            out.writeObject( encryption.Encrypt("post"));
+            out.writeObject(encryption.Encrypt(post));
+            out.writeObject(encryption.Encrypt(imgArray));
+            out.writeObject(encryption.Encrypt(ImageExplorer.getImageType(path)));
+
+            /*receive the image id and download image to src folder */
+            ImageExplorer.downloadImage(encryption.Decrypt( (SealedObject) in.readObject(), String.class), ImageExplorer.getImageType(path), imgArray, ImageExplorer.Project.CLIENT);
+        }
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace();}
+
+
+
     }
 }

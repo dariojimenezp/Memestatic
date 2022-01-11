@@ -80,7 +80,7 @@ public class AtlasDB {
      * @param collectionName the name of the collection
      * @return a list of the all the documents in the colleciton
      */
-    public List<String> getAllDocuments(String collectionName){
+    public synchronized List<String> getAllDocuments(String collectionName){
 
         /* get collection from database */
         MongoCollection<Document> collection = collections.get(collectionName);
@@ -107,7 +107,7 @@ public class AtlasDB {
      * @param value value of the identifier
      * @return
      */
-    public String findDocument(String collectionName, String fieldName, String value){
+    public synchronized String findDocument(String collectionName, String fieldName, String value){
 
         /* get collection from database */
         MongoCollection<Document> collection = collections.get(collectionName);
@@ -128,12 +128,12 @@ public class AtlasDB {
         else return null;
     }
 
-    public void addUser(String username, String passwordHash){
+    public synchronized void addUser(String username, String passwordHash){
         Document user = new Document("username", username).append("passwordHash", passwordHash);
         collections.get("Users").insertOne(user);
     }
 
-    public void addPost(Post post, String id){
+    public synchronized void addPost(Post post, String id){
         Document postDocument = new Document("postName", post.getPostName()).append("postUser", post.getPostUser())
                 .append("imgName", post.getImgName()).append("itemID", id).append("ratingSum", 0).append("totalRatings", 0);
 
@@ -141,12 +141,12 @@ public class AtlasDB {
 
     }
 
-    public void addComment(String post, String comment){
+    public synchronized void addComment(String post, String comment){
 
         //collections.get("Post").updateOne( eq("postName"))
     }
 
-    public String getImageID(){
+    public synchronized String getImageID(){
         /* get imageID */
         String doc = findDocument("ImageID", "_id", IMAGE_ID);
         Integer id = new GsonBuilder().create().fromJson(doc, ImageID.class).getImageID();
@@ -157,7 +157,7 @@ public class AtlasDB {
         return String.valueOf(id);
     }
 
-    public void updateRating(Post post){
+    public synchronized void updateRating(Post post){
 
         collections.get("Posts").updateOne( eq("itemID", post.getItemID()), new Document("$set",
                 new Document("rating", post.getRating()).append("totalRatings", post.getTotalRatings()).append("ratingSum", post.getRatingSum()) ) );

@@ -3,6 +3,7 @@ package Server;
 import Exceptions.CollectionNotFoundException;
 import Exceptions.DatabaseNotFoundException;
 import ServerClientObjects.Post;
+import ServerClientObjects.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

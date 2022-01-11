@@ -277,11 +277,15 @@ public class ClientHandler implements Runnable{
     private void updateRating(){
 
         Post post = null;
-        try { post = encryption.Decrypt( (SealedObject) in.readObject(), Post.class); }
+        String username = null;
+        try {
+            post = encryption.Decrypt( (SealedObject) in.readObject(), Post.class);
+            username = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+        }
 
         catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
-        db.updateRating(post);
+        db.updateRating(post, username);
 
     }
 

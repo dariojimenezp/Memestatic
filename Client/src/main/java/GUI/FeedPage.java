@@ -29,7 +29,7 @@ public class FeedPage {
 
     private Integer MEME_WIDTH = 600;
 
-    private User user;
+    private User user = new User("dario_jimenezp", "l");
 
     private Stage stage;
 
@@ -239,6 +239,8 @@ public class FeedPage {
                 /* if user is not logged in, tell user to log in to rate */
                 if(user == null) throw new NumberFormatException("Must be logged in to rate");
 
+                if(!user.hasRatedPost(post.getItemID())) throw new NumberFormatException("Already rated this post!");
+
                 if(rateField.getText().isEmpty()) throw new NumberFormatException("Enter valid value!");
 
                 double rating = Integer.parseInt(rateField.getText());
@@ -248,7 +250,8 @@ public class FeedPage {
 
                 post.addRating(rating);
                 ratingLabel.setText("   " + post.getRating() + "/10");
-                Main.client.addRating(post);
+                Main.client.addRating(post, user.getUsername());
+                user.addRatePost(post.getItemID());
             }
             catch (NumberFormatException e){ wrongRatingInput(rateFieldBox, e.getMessage()); }
         });

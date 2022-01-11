@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import Encryption.Encryption;
+import ServerClientObjects.User;
 
 public class Client {
 
@@ -166,12 +167,13 @@ public class Client {
         }
     }
 
-    public void addRating(Post post){
+    public void addRating(Post post, String username){
 
         try {
-            out.writeInt(2);
+            out.writeInt(3);
             out.writeObject(encryption.Encrypt("update rating"));
             out.writeObject(encryption.Encrypt(post));
+            out.writeObject(encryption.Encrypt("dario_jimenezp"));
         }
         catch (IOException e) {  e.printStackTrace(); }
     }

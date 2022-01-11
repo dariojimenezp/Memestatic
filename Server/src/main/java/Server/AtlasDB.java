@@ -157,10 +157,17 @@ public class AtlasDB {
         return String.valueOf(id);
     }
 
-    public synchronized void updateRating(Post post){
+    public synchronized void updateRating(Post post, String username){
 
+        /* update post */
         collections.get("Posts").updateOne( eq("itemID", post.getItemID()), new Document("$set",
                 new Document("rating", post.getRating()).append("totalRatings", post.getTotalRatings()).append("ratingSum", post.getRatingSum()) ) );
+
+        /* add post to user's rated posts */
+        collections.get("Users").updateOne( eq("username", username), new Document("$push", new Document("ratedPosts", post.getItemID())));
+
     }
+
+
 
 }

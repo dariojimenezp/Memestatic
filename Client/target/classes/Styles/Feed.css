@@ -80,7 +80,7 @@
     -fx-font-size: 22px;
 }
 
-#validValueLabel{
+#rateWarningLabel{
     -fx-text-fill: #e81515;
     -fx-font-style: italic;
     -fx-font-size: 10px;

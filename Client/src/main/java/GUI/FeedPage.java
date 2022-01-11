@@ -232,17 +232,25 @@ public class FeedPage {
 
         /* button handler */
         rateButton.setOnAction(event -> {
+
+
             try{
+
+                /* if user is not logged in, tell user to log in to rate */
+                if(user == null) throw new NumberFormatException("Must be logged in to rate");
+
+                if(rateField.getText().isEmpty()) throw new NumberFormatException("Enter valid value!");
+
                 double rating = Integer.parseInt(rateField.getText());
 
                 /* if input is invalid, show warning */
-                if(rating < 0 || rating > 10) throw new NumberFormatException();
+                if(rating < 0 || rating > 10) throw new NumberFormatException("Enter valid value!");
 
                 post.addRating(rating);
                 ratingLabel.setText("   " + post.getRating() + "/10");
                 Main.client.addRating(post);
             }
-            catch (NumberFormatException e){ rateFieldBox.getChildren().add(wrongRatingInput());}
+            catch (NumberFormatException e){ wrongRatingInput(rateFieldBox, e.getMessage()); }
         });
 
         /* rate box */
@@ -264,10 +272,15 @@ public class FeedPage {
         return box;
     }
 
-    private Label wrongRatingInput(){
-        Label label = new Label("Enter valid value!");
-        label.setId("validValueLabel");
-        return label;
+
+    private void wrongRatingInput(VBox box, String msg){
+
+        /* if it already has warning, don't add another warning */
+        if(box.getChildren().size() == 2) return;
+
+        Label label = new Label(msg);
+        label.setId("rateWarningLabel");
+        box.getChildren().add(label);
     }
 
     private void addPosts(VBox root, ArrayList<Post> posts){

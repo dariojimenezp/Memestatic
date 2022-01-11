@@ -6,9 +6,7 @@ import ServerClientObjects.User;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -65,7 +63,6 @@ public class FeedPage {
             /* if no more posts, add no more posts label */
             if(morePosts.isEmpty()){
                 Label noMorePostsLabel = new Label("There are no more posts! :(");
-                noMorePostsLabel.setId("topBarLabels");
                 root.getChildren().addAll(noMorePostsLabel, new Text(""));
                 return;
             }
@@ -100,11 +97,9 @@ public class FeedPage {
 
         /* 'memestatic' label */
         Label memestaticLabel = new Label("Memestatic");
-        memestaticLabel.setId("topBarLabels");
 
         /* feed label */
         Label feedLabel = new Label("Meme Feed");
-        feedLabel.setId("topBarLabels");
 
         /* root */
         HBox root = new HBox();
@@ -164,24 +159,16 @@ public class FeedPage {
 
         /* post name */
         Label postName = new Label("   " + post.getPostName());
-        postName.setId("postName");
-
-        /* rating */
-        Label rating = new Label(post.getRating() == null ? "no ratings" : "        " + post.getRating() + "/10");
-        rating.setId("postName");
-
-        /* post name + rating box */
-        HBox postNameBox = new HBox();
-        postNameBox.getChildren().addAll(postName,
-                new Text("                                                                                                      "),
-                rating);
 
         /* username of who posted it */
         Label username = new Label("       " + post.getPostUser());
         username.setId("username");
 
-        postBox.getChildren().addAll(postBoxPadding(), postNameBox, username, new Text(""), memeImage(post.getImgName()),
-                new Text(""), commentImage());
+        /* rating */
+        Label rating = new Label(post.hasRatings() ? "   " + post.getRating() + "/10" : "   no ratings");
+
+        postBox.getChildren().addAll(postBoxPadding(), postName, username, rating, new Text(""), memeImage(post.getImgName()),
+                new Text(""), postBottom(post, rating), new Text(""));
 
         HBox root = new HBox();
         root.getChildren().addAll(horizontalPadding(),postBox, horizontalPadding());
@@ -207,7 +194,7 @@ public class FeedPage {
         return root;
     }
 
-    private HBox commentImage(){
+    private HBox postBottom(Post post, Label ratingLabel){
 
         /* image */
         ImageView imageView = new ImageView();
@@ -220,23 +207,66 @@ public class FeedPage {
         Label commentLabel = new Label(" 300 comments");
         commentLabel.setId("commentLabel");
 
-        /* comment boc */
+        /* comment box */
         HBox commentBox = new HBox();
         commentBox.getChildren().addAll(new Text("  "), imageView, commentLabel, new Text("  "));
         commentBox.setId("postBox");
 
+        /* Rating section */
+
+        /* rate button */
+        Button rateButton = new Button("Rate");
+        rateButton.setId("rateButton");
+
+
+
+        /* change color when mouse is hovering button */
+        rateButton.setOnMouseEntered(event -> rateButton.setStyle("-fx-background-color: #3b3b3b"));
+
+        rateButton.setOnMouseExited(event -> rateButton.setStyle("-fx-background-color: #454545"));
+
+        /* text field */
+        VBox rateFieldBox = new VBox();
+        TextField rateField = new TextField();
+        rateFieldBox.getChildren().add(rateField);
+
+        /* button handler */
+        rateButton.setOnAction(event -> {
+            try{
+                double rating = Integer.parseInt(rateField.getText());
+
+                /* if input is invalid, show warning */
+                if(rating < 0 || rating > 10) throw new NumberFormatException();
+
+                post.addRating(rating);
+                ratingLabel.setText("   " + post.getRating() + "/10");
+            }
+            catch (NumberFormatException e){ rateFieldBox.getChildren().add(wrongRatingInput());}
+        });
+
+        /* rate box */
+        HBox ratingBox = new HBox();
+        ratingBox.getChildren().addAll(rateFieldBox, new Text("  "), rateButton);
+
         HBox box = new HBox();
-        box.getChildren().addAll(new Text("             "), commentBox);
+        box.getChildren().addAll(new Text("             "), commentBox,
+                new Text("                                                              "), ratingBox);
 
         /* handler if clicked */
         commentBox.setOnMouseClicked(event -> {
-
+            //TODO
         });
 
         commentBox.setOnMouseEntered(event -> commentBox.setStyle("-fx-background-color: #454545"));
 
         commentBox.setOnMouseExited(event -> commentBox.setStyle("-fx-background-color: #383838"));
         return box;
+    }
+
+    private Label wrongRatingInput(){
+        Label label = new Label("Enter valid value!");
+        label.setId("validValueLabel");
+        return label;
     }
 
     private void addPosts(VBox root, ArrayList<Post> posts){

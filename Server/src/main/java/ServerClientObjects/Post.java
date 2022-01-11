@@ -83,5 +83,9 @@ public class Post implements Serializable {
         this.imageArray = imageArray;
     }
 
+    public Boolean hasRatings(){
+        return !(totalRatings == 0);
+    }
+
 
 }

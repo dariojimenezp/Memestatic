@@ -134,7 +134,7 @@ public class AtlasDB {
 
     public void addPost(Post post, String id){
         Document postDocument = new Document("postName", post.getPostName()).append("postUser", post.getPostUser())
-                .append("imgName", post.getImgName()).append("itemID", id);
+                .append("imgName", post.getImgName()).append("itemID", id).append("ratingSum", 0).append("totalRatings", 0);
 
         collections.get("Posts").insertOne(postDocument);
 

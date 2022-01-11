@@ -1,7 +1,7 @@
 
 
 /* 'memestatic' label */
-#topBarLabels{
+.label{
     -fx-text-fill: white;
     -fx-font-size: 30px;
     -fx-font-family: "OCR A Extended";
@@ -63,5 +63,27 @@
     -fx-font-family: "OCR A Extended";
 }
 
+.text-field{
+    -fx-background-color: #454545;
+    -fx-text-fill: white;
+    -fx-max-width: 100px;
+    -fx-font-size: 18px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+#rateButton{
+    -fx-background-color: #454545;
+    -fx-background-radius: 10px;
+    -fx-text-fill: white;
+    -fx-font-family: "OCR A Extended";
+    -fx-font-size: 22px;
+}
+
+#validValueLabel{
+    -fx-text-fill: #e81515;
+    -fx-font-style: italic;
+    -fx-font-size: 10px;
+}
 
 

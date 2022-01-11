@@ -38,7 +38,7 @@ public class Post implements Serializable {
     public void addRating(Double rating){
         ratingSum += rating;
         totalRatings++;
-        rating = ratingSum/totalRatings;
+        this.rating = ratingSum/totalRatings;
     }
 
     public void addComment(String comment){
@@ -81,6 +81,10 @@ public class Post implements Serializable {
 
     public void setImageArray(byte[] imageArray) {
         this.imageArray = imageArray;
+    }
+
+    public Boolean hasRatings(){
+        return !(totalRatings == 0);
     }
 
 

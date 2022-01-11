@@ -38,7 +38,7 @@ public class Post implements Serializable {
     public void addRating(Double rating){
         ratingSum += rating;
         totalRatings++;
-        rating = ratingSum/totalRatings;
+        this.rating = ratingSum/totalRatings;
     }
 
     public void addComment(String comment){
@@ -74,6 +74,14 @@ public class Post implements Serializable {
         return itemID;
     }
 
+    public Double getRatingSum() {
+        return ratingSum;
+    }
+
+    public Integer getTotalRatings() {
+        return totalRatings;
+    }
+
     /** setters **/
     public void setImgName(String imgName) {
         this.imgName = imgName;
@@ -86,6 +94,7 @@ public class Post implements Serializable {
     public Boolean hasRatings(){
         return !(totalRatings == 0);
     }
+
 
 
 }

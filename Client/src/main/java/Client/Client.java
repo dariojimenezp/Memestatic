@@ -164,6 +164,15 @@ public class Client {
         for(Post post: posts){
             if(!downloadedImagesSet.contains(post.getImgName())) ImageExplorer.downloadImage(post.getItemID(), ImageExplorer.getImageType(post.getImgName()), post.getImageArray(), ImageExplorer.Project.CLIENT);
         }
+    }
 
+    public void addRating(Post post){
+
+        try {
+            out.writeInt(2);
+            out.writeObject(encryption.Encrypt("update rating"));
+            out.writeObject(encryption.Encrypt(post));
+        }
+        catch (IOException e) {  e.printStackTrace(); }
     }
 }

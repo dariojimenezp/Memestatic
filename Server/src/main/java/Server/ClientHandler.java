@@ -129,6 +129,10 @@ public class ClientHandler implements Runnable{
                 sendPosts();
                 break;
 
+            case "update rating":
+                updateRating();
+                break;
+
             default:
                 System.out.println("Invalid message");
                 return;
@@ -268,6 +272,17 @@ public class ClientHandler implements Runnable{
         try { out.writeObject(encryption.Encrypt(postsArray)); }
 
         catch (IOException e) { e.printStackTrace(); }
+    }
+
+    private void updateRating(){
+
+        Post post = null;
+        try { post = encryption.Decrypt( (SealedObject) in.readObject(), Post.class); }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+        db.updateRating(post);
+
     }
 
 

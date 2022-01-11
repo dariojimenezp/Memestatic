@@ -240,6 +240,7 @@ public class FeedPage {
 
                 post.addRating(rating);
                 ratingLabel.setText("   " + post.getRating() + "/10");
+                Main.client.addRating(post);
             }
             catch (NumberFormatException e){ rateFieldBox.getChildren().add(wrongRatingInput());}
         });

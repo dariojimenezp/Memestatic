@@ -13,6 +13,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Indexes;
+import javafx.geometry.Pos;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -154,6 +155,12 @@ public class AtlasDB {
         collections.get("ImageID").updateOne( eq("_id", new ObjectId(IMAGE_ID)), new Document("$set", new Document("imageID", id+1)));
 
         return String.valueOf(id);
+    }
+
+    public void updateRating(Post post){
+
+        collections.get("Posts").updateOne( eq("itemID", post.getItemID()), new Document("$set",
+                new Document("rating", post.getRating()).append("totalRatings", post.getTotalRatings()).append("ratingSum", post.getRatingSum()) ) );
     }
 
 }

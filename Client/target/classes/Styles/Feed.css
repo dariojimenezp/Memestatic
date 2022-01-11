@@ -86,4 +86,8 @@
     -fx-font-size: 10px;
 }
 
+#createPostPane{
+    -fx-background-color: white;
+    -fx-background-radius: 35px;
+}
 

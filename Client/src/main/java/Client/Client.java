@@ -173,7 +173,7 @@ public class Client {
             out.writeInt(3);
             out.writeObject(encryption.Encrypt("update rating"));
             out.writeObject(encryption.Encrypt(post));
-            out.writeObject(encryption.Encrypt("dario_jimenezp"));
+            out.writeObject(encryption.Encrypt(username));
         }
         catch (IOException e) {  e.printStackTrace(); }
     }

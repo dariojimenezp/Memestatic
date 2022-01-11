@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -19,7 +20,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-//TODO: add actual post information
+//TODO: enable user to rate post again, but have it just replace the old rating with the new rating
 
 public class FeedPage {
 
@@ -29,7 +30,7 @@ public class FeedPage {
 
     private Integer MEME_WIDTH = 600;
 
-    private User user = new User("dario_jimenezp", "l");
+    private User user = new User("spooderman", "");
 
     private Stage stage;
 
@@ -81,7 +82,7 @@ public class FeedPage {
         scrollPane.setContent(root);
 
         /* sets up scene */
-        Scene scene = new Scene(scrollPane, 1900, 900);
+        Scene scene = new Scene(scrollPane, 1920, 980);
         scene.getStylesheets().add(GUI.class.getResource("/Styles/Feed.css").toExternalForm());
 
         /* sets up stage */
@@ -129,6 +130,23 @@ public class FeedPage {
             root.getChildren().addAll( topBarPadding(), logInButton, new Text("      "), createAccountButton);
         }
 
+        else root.getChildren().addAll(topBarPadding(), new Text("                                                    "));
+
+
+        /* create post */
+        StackPane createPostPane  = new StackPane();
+        ImageView createPostButton = new ImageView(new Image(String.valueOf(getClass().getResource("/Images/plus3.png"))));
+        createPostButton .setFitWidth(35);
+        createPostButton .setFitHeight(35);
+        roundImage(createPostButton , 35, 35);
+
+        /* add image to pane */
+        createPostPane.getChildren().add(createPostButton);
+        createPostPane.setId("createPostPane");
+
+        createPostPane.setOnMouseEntered(event -> createPostPane.setStyle("-fx-background-color: #e6e6e6"));
+
+        createPostButton.setOnMouseExited(event -> createPostButton.setStyle("-fx-background-color: white"));
 
         /* profile logo */
         ImageView profileLogo = new ImageView(new Image(String.valueOf(getClass().getResource("/Images/profile.png"))));
@@ -140,7 +158,7 @@ public class FeedPage {
         profileLogo.setOnMouseClicked(event -> {
 
         });
-        root.getChildren().addAll(new Text("  "), profileLogo);
+        root.getChildren().addAll(createPostPane, new Text("      "), profileLogo);
 
 
         return root;
@@ -239,7 +257,7 @@ public class FeedPage {
                 /* if user is not logged in, tell user to log in to rate */
                 if(user == null) throw new NumberFormatException("Must be logged in to rate");
 
-                if(!user.hasRatedPost(post.getItemID())) throw new NumberFormatException("Already rated this post!");
+                if(user.hasRatedPost(post.getItemID())) throw new NumberFormatException("Already rated this post!");
 
                 if(rateField.getText().isEmpty()) throw new NumberFormatException("Enter valid value!");
 

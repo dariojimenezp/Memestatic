@@ -95,6 +95,4 @@ public class Post implements Serializable {
         return !(totalRatings == 0);
     }
 
-
-
 }

@@ -19,6 +19,8 @@ import java.util.ArrayList;
 //TODO: create post UI
 //TODO: user logged in UI
 //TODO: comments UI
+//TODO: profile
+//TODO: search
 public class Main extends Application {
 
     private static final int IMAGE_MAX_SIZE = 32000000;

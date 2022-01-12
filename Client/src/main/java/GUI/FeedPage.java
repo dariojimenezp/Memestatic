@@ -27,13 +27,11 @@ import java.util.HashSet;
 
 public class FeedPage {
 
-    private Integer MEME_LIMIT = 10;
-
     private Integer MEME_HEIGHT = 600;
 
     private Integer MEME_WIDTH = 600;
 
-    private Integer MAX_TITLE_LENGTH = 30;
+    private Integer MAX_TITLE_LENGTH = 40;
 
     private User user = new User("spooderman", "");
 
@@ -143,7 +141,7 @@ public class FeedPage {
             Button logInButton = new Button("Log In");
             logInButton.setId("logInButton");
             logInButton.setOnAction(event -> {
-                stage.close();
+                closeFeedPage();
                 GUI.logInPage();
             });
 
@@ -151,7 +149,7 @@ public class FeedPage {
             Button createAccountButton = new Button("Create Account");
             createAccountButton.setId("createAccountButton");
             createAccountButton.setOnAction(event -> {
-                stage.close();
+                closeFeedPage();
                 GUI.createAccountPage();
             });
 
@@ -163,7 +161,7 @@ public class FeedPage {
 
         /* create post */
         StackPane createPostPane  = new StackPane();
-        ImageView createPostButton = new ImageView(new Image(String.valueOf(getClass().getResource("/Images/plus3.png"))));
+        ImageView createPostButton = new ImageView(new Image(String.valueOf(getClass().getResource("/Images/plus.png"))));
         createPostButton .setFitWidth(35);
         createPostButton .setFitHeight(35);
         roundImage(createPostButton , 35, 35);
@@ -178,7 +176,7 @@ public class FeedPage {
         createPostPane.setOnMouseExited(event -> createPostPane.setStyle("-fx-background-color: white"));
 
         createPostPane.setOnMouseClicked(event -> {
-            stage.close();
+            closeFeedPage();
             createPost();
         });
 
@@ -523,6 +521,7 @@ public class FeedPage {
             });
 
             postBox.getChildren().addAll(warning, homeButton, new Text(""));
+            hasFetched = false;
         });
 
         /* add everything to post box */

@@ -250,7 +250,8 @@ public class ClientHandler implements Runnable{
 
         if(posts.size() > postIndex) {
             /* put all posts into postsArray and put the imageArray into it */
-            for (int i = postIndex; i < postIndex + 5; i++) {
+            int oldIndex = postIndex;
+            for (int i = oldIndex; i < oldIndex + 5; i++) {
 
                 /* get and update post */
                 Post post = gson.fromJson(posts.get(i), Post.class);
@@ -260,13 +261,13 @@ public class ClientHandler implements Runnable{
                 /* add post to array */
                 postsArray.add(post);
 
+                postIndex++;
+
                 /* check if this is the last post */
                 if (posts.size() - 1 == i) break;
             }
         }
 
-        /* increment index for the next time more posts need to be fetched */
-        postIndex += 5;
 
         /* send the list of posts to client */
         try { out.writeObject(encryption.Encrypt(postsArray)); }

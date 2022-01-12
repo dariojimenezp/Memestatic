@@ -414,14 +414,13 @@ public class FeedPage {
 
         uploadPicButton.setOnAction(event -> {
             /* get image path from user */
-            String path = ImageExplorer.getPath();
+            String path = ImageExplorer.getPath(stage);
 
-            /* remove upload picture button and add label */
-            uploadPicBox.getChildren().clear();
 
             /* if chosen file is not supported, tell user to pick correct file */
             String imageType = ImageExplorer.getImageType(path);
             if(!imageType.equals("png") && !imageType.equals("jpeg") && !imageType.equals("jpg")){
+                if(uploadPicBox.getChildren().size() == 2) uploadPicBox.getChildren().remove(1);
                 Label picWarning = new Label("Invalid file format! select a png, jpg, or jpeg file!");
                 picWarning.setId("unsuccessfulLabel");
                 uploadPicBox.getChildren().add(picWarning);
@@ -439,6 +438,7 @@ public class FeedPage {
             /* add successfully uploaded label */
             Label successfulUpload = new Label("Image successfully uploaded");
             successfulUpload.setId("successfulLabel");
+            if(uploadPicBox.getChildren().size() == 2) uploadPicBox.getChildren().remove(1);
             uploadPicBox.getChildren().add(successfulUpload);
             uploadedImage = true;
             uploadedImagePath = path;
@@ -470,18 +470,18 @@ public class FeedPage {
 
             /* if user did not put a title or upload an image, indicate user to do so */
             if(title.isEmpty() || !uploadedImage || title.equals("Title")){
-                postBox.getChildren().remove(postBox.getChildren().size()-1);
+                if(uploadPicBox.getChildren().size() == 2) uploadPicBox.getChildren().remove(1);
                 Label warning = new Label("Set a title and upload an image!");
                 warning.setId("unsuccessfulLabel");
-                postBox.getChildren().add(warning);
+                uploadPicBox.getChildren().add(warning);
                 return;
             }
 
             if(title.length() > MAX_TITLE_LENGTH){
-                postBox.getChildren().remove(postBox.getChildren().size()-1);
+                if(uploadPicBox.getChildren().size() == 2) uploadPicBox.getChildren().remove(1);
                 Label warning = new Label("Max title length is" + MAX_TITLE_LENGTH + "!");
                 warning.setId("unsuccessfulLabel");
-                postBox.getChildren().add(warning);
+                uploadPicBox.getChildren().add(warning);
                 return;
             }
 

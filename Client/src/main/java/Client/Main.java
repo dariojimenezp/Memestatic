@@ -5,7 +5,11 @@ import GUI.ImageExplorer;
 import ServerClientObjects.Post;
 import Exceptions.NoServerFoundException;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;

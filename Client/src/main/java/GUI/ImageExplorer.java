@@ -1,5 +1,8 @@
 package GUI;
 
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -17,17 +20,10 @@ public class ImageExplorer {
         SERVER,
         CLIENT
     };
-    public static String getPath(){
+    public static String getPath(Stage stage){
 
-        FileDialog fd = new FileDialog(new JFrame());
-        fd.setVisible(true);
-        File[] f = fd.getFiles();
-
-        if(f.length > 0){
-            return fd.getFiles()[0].getAbsolutePath();
-        }
-
-        return null;
+        FileChooser chooser = new FileChooser();
+        return chooser.showOpenDialog(stage).getAbsolutePath();
     }
 
     public static void downloadImage(String imageID, String imageType, byte[] imageArray, Project project){

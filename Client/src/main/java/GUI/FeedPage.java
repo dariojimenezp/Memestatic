@@ -20,6 +20,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 //TODO: enable user to rate post again, but have it just replace the old rating with the new rating
 
@@ -41,8 +43,17 @@ public class FeedPage {
 
     private String uploadedImagePath;
 
+    private ArrayList<Post> postsList;
+
+    private HashSet<String> postsPosted;
+
+    private Boolean hasFetched;
+
     public FeedPage(User user){
 
+        postsList = new ArrayList<Post>();
+        postsPosted = new HashSet<String>();
+        hasFetched =  false;
         createFeedPage();
     }
 
@@ -59,8 +70,11 @@ public class FeedPage {
         verticalPadding(root);
 
         /* add posts */
-        ArrayList<Post> posts = Main.client.getPosts();
-        addPosts(root, posts);
+        if(!hasFetched){
+            postsList.addAll(Main.client.getPosts());
+            hasFetched = true;
+        }
+        addPosts(root, postsList);
 
         /* button to add more posts */
         Button morePostsButton = new Button("See more Posts");
@@ -68,19 +82,22 @@ public class FeedPage {
 
         /* more posts handler */
         morePostsButton.setOnAction(event -> {
-            root.getChildren().remove(morePostsButton);
 
-            ArrayList<Post> morePosts = Main.client.getPosts();
+            int numPosts = postsList.size();
+            postsList.addAll(Main.client.getPosts());
 
             /* if no more posts, add no more posts label */
-            if(morePosts.isEmpty()){
+            if(numPosts == postsList.size()){
                 Label noMorePostsLabel = new Label("There are no more posts! :(");
                 root.getChildren().addAll(noMorePostsLabel, new Text(""));
+                morePostsButton.setId("transparentObject");
                 return;
             }
 
+            root.getChildren().remove(morePostsButton);
+
             /* if there are more posts available, add them to feed page */
-            addPosts(root, morePosts);
+            addPosts(root, postsList);
             root.getChildren().add(morePostsButton);
 
         });
@@ -323,8 +340,12 @@ public class FeedPage {
 
     private void addPosts(VBox root, ArrayList<Post> posts){
 
-        for(int i=0; i< posts.size(); i++){
-            root.getChildren().addAll(post(posts.get(i)), new Text(""));
+        for(Post post: posts){
+            if(!postsPosted.contains(post.getItemID())){
+                root.getChildren().addAll(post(post), new Text(""));
+                postsPosted.add(post.getItemID());
+            }
+
         }
 
     }
@@ -529,5 +550,12 @@ public class FeedPage {
         root.getChildren().addAll(new Text("             "), imageBox, new Text("             "));
 
         return root;
+    }
+
+    private void closeFeedPage(){
+        stage.close();
+        for(Post post: postsList){
+            postsPosted.clear();
+        }
     }
 }

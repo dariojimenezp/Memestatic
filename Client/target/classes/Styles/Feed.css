@@ -23,6 +23,7 @@
 
 #rootBox{
     -fx-background-color: #5B49F5;
+    -fx-alignment: center;
 }
 
 #postBox{
@@ -120,4 +121,11 @@
     -fx-text-fill: #e81515;
     -fx-font-style: italic;
     -fx-font-size: 15px;
+}
+
+#transparentObject{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-progress-color: transparent;
+    -fx-color-label-visible: transparent;
 }

@@ -23,8 +23,8 @@
 
 #rootBox{
     -fx-background-color: #5B49F5;
-    -fx-alignment: center;
 }
+
 #postBox{
     -fx-background-color: #383838;
     -fx-background-radius: 15px;
@@ -91,3 +91,33 @@
     -fx-background-radius: 35px;
 }
 
+#titleField{
+    -fx-min-width: 715px;
+    -fx-highlight-fill: transparent;
+    -fx-font-family: "OCR A Extended";
+    -fx-prompt-text-fill: #787878;
+    -fx-text-fill: white;
+}
+
+#createPostButtons{
+    -fx-font-size: 30px;
+    -fx-background-color: #5B49F5;
+    -fx-text-fill: white;
+}
+
+#createPostImageBox{
+    -fx-background-color: #454545;
+    -fx-background-radius: 10px;
+}
+
+#successfulLabel{
+    -fx-text-fill: #2cc900;
+    -fx-font-style: italic;
+    -fx-font-size: 15px;
+}
+
+#unsuccessfulLabel{
+    -fx-text-fill: #e81515;
+    -fx-font-style: italic;
+    -fx-font-size: 15px;
+}

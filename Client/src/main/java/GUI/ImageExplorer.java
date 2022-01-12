@@ -18,6 +18,7 @@ public class ImageExplorer {
         CLIENT
     };
     public static String getPath(){
+
         FileDialog fd = new FileDialog(new JFrame());
         fd.setVisible(true);
         File[] f = fd.getFiles();

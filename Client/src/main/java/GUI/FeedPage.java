@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -30,12 +31,22 @@ public class FeedPage {
 
     private Integer MEME_WIDTH = 600;
 
+    private Integer MAX_TITLE_LENGTH = 30;
+
     private User user = new User("spooderman", "");
 
     private Stage stage;
 
+    private Boolean uploadedImage;
+
+    private String uploadedImagePath;
+
     public FeedPage(User user){
 
+        createFeedPage();
+    }
+
+    private void createFeedPage(){
         /* root */
         VBox root = new VBox();
         root.setId("rootBox");
@@ -144,9 +155,15 @@ public class FeedPage {
         createPostPane.getChildren().add(createPostButton);
         createPostPane.setId("createPostPane");
 
+        /* create post handlers */
         createPostPane.setOnMouseEntered(event -> createPostPane.setStyle("-fx-background-color: #e6e6e6"));
 
-        createPostButton.setOnMouseExited(event -> createPostButton.setStyle("-fx-background-color: white"));
+        createPostPane.setOnMouseExited(event -> createPostPane.setStyle("-fx-background-color: white"));
+
+        createPostPane.setOnMouseClicked(event -> {
+            stage.close();
+            createPost();
+        });
 
         /* profile logo */
         ImageView profileLogo = new ImageView(new Image(String.valueOf(getClass().getResource("/Images/profile.png"))));
@@ -185,7 +202,7 @@ public class FeedPage {
         /* rating */
         Label rating = new Label(post.hasRatings() ? "   " + post.getRating() + "/10" : "   no ratings");
 
-        postBox.getChildren().addAll(postBoxPadding(), postName, username, rating, new Text(""), memeImage(post.getImgName()),
+        postBox.getChildren().addAll(boxPadding(), postName, username, rating, new Text(""), memeImage(post.getImgName()),
                 new Text(""), postBottom(post, rating), new Text(""));
 
         HBox root = new HBox();
@@ -322,7 +339,7 @@ public class FeedPage {
                 "                           ");
     }
 
-    private Text postBoxPadding(){
+    private Text boxPadding(){
         return new Text("                                                                                                   " +
                         "                                                                                                   ");
     }
@@ -344,5 +361,173 @@ public class FeedPage {
 
         imageView.setClip(null);
         imageView.setImage(image);
+    }
+
+    private void createPost(){
+
+        VBox root = new VBox();
+        root.setId("rootBox");
+
+        root.getChildren().addAll(topBar(), new Text(""), new Text(""), createPostBox());
+
+
+
+        /* sets up scene */
+        Scene scene = new Scene(root, 1920, 980);
+        scene.getStylesheets().add(GUI.class.getResource("/Styles/Feed.css").toExternalForm());
+
+        /* sets up stage */
+        stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
+    private HBox createPostBox(){
+
+        uploadedImage = false;
+        uploadedImagePath = null;
+
+        /* root */
+        VBox postBox = new VBox();
+        postBox.setId("postBox");
+        postBox.setAlignment(Pos.CENTER);
+
+        /* post label */
+        Label postLabel = new Label("Post");
+
+
+        /* title text field */
+        TextField titleField = new TextField();
+        titleField.setPromptText("Title");
+        titleField.setId("titleField");
+
+        HBox pictureBox = createPostPicturePadding();
+
+        /* button to upload picture/meme */
+        VBox uploadPicBox = new VBox();
+        Button uploadPicButton = new Button("Upload Picture");
+        uploadPicButton.setId("createPostButtons");
+        uploadPicBox.setAlignment(Pos.CENTER);
+        uploadPicBox.getChildren().add(uploadPicButton);
+
+
+        uploadPicButton.setOnAction(event -> {
+            /* get image path from user */
+            String path = ImageExplorer.getPath();
+
+            /* remove upload picture button and add label */
+            uploadPicBox.getChildren().clear();
+
+            /* if chosen file is not supported, tell user to pick correct file */
+            String imageType = ImageExplorer.getImageType(path);
+            if(!imageType.equals("png") && !imageType.equals("jpeg") && !imageType.equals("jpg")){
+                Label picWarning = new Label("Invalid file format! select a png, jpg, or jpeg file!");
+                picWarning.setId("unsuccessfulLabel");
+                uploadPicBox.getChildren().add(picWarning);
+                return;
+            }
+
+            /* upload image to box */
+            ImageView imageView = new ImageView(new Image("file:" + path));
+            imageView.setFitWidth(MEME_WIDTH);
+            imageView.setFitHeight(MEME_HEIGHT);
+            pictureBox.getChildren().clear();
+            pictureBox.getChildren().addAll(imageView );
+            pictureBox.setAlignment(Pos.CENTER);
+
+            /* add successfully uploaded label */
+            Label successfulUpload = new Label("Image successfully uploaded");
+            successfulUpload.setId("successfulLabel");
+            uploadPicBox.getChildren().add(successfulUpload);
+            uploadedImage = true;
+            uploadedImagePath = path;
+
+        });
+
+        /* button to create the post */
+        Button postButton = new Button("Post");
+        postButton.setId("createPostButtons");
+
+
+        /* button to cancel the post */
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setId("createPostButtons");
+        cancelButton.setOnAction(event -> {
+            stage.close();
+            createFeedPage();
+        });
+
+        /* hbox for post and cancel buttons */
+        HBox bottomBox = new HBox();
+        bottomBox.setId("bottomCreatePostBox");
+        bottomBox.getChildren().addAll(cancelButton, new Text("  "), postButton);
+        bottomBox.setAlignment(Pos.CENTER_RIGHT);
+
+        postButton.setOnAction(event -> {
+
+            String title = titleField.getText();
+
+            /* if user did not put a title or upload an image, indicate user to do so */
+            if(title.isEmpty() || !uploadedImage || title.equals("Title")){
+                postBox.getChildren().remove(postBox.getChildren().size()-1);
+                Label warning = new Label("Set a title and upload an image!");
+                warning.setId("unsuccessfulLabel");
+                postBox.getChildren().add(warning);
+                return;
+            }
+
+            if(title.length() > MAX_TITLE_LENGTH){
+                postBox.getChildren().remove(postBox.getChildren().size()-1);
+                Label warning = new Label("Max title length is" + MAX_TITLE_LENGTH + "!");
+                warning.setId("unsuccessfulLabel");
+                postBox.getChildren().add(warning);
+                return;
+            }
+
+            /* upload post */
+            Post post = new Post(title, user.getUsername(), ImageExplorer.convertImageToByteArray(uploadedImagePath, ImageExplorer.getImageType(uploadedImagePath)));
+            Main.client.publishPost(post, uploadedImagePath);
+            postBox.getChildren().remove(postBox.getChildren().size()-1);
+            postBox.getChildren().removeAll(uploadPicBox, bottomBox, titleField);
+
+            Label warning = new Label("successfully published!");
+            warning.setId("successfulLabel");
+
+            Button homeButton = new Button("Home");
+            homeButton.setId("createPostButtons");
+            homeButton.setOnAction(e -> {
+                stage.close();
+                createFeedPage();
+            });
+
+            postBox.getChildren().addAll(warning, homeButton, new Text(""));
+        });
+
+        /* add everything to post box */
+        postBox.getChildren().addAll(boxPadding(), postLabel, new Text(""), titleField, new Text(""),pictureBox,
+                new Text(""), uploadPicBox, new Text(""), bottomBox, new Text(""));
+        HBox root = new HBox();
+
+        root.getChildren().addAll(horizontalPadding(),postBox, horizontalPadding());
+
+        return root;
+    }
+
+    private HBox createPostPicturePadding(){
+
+        HBox root = new HBox();
+
+        VBox imageBox = new VBox();
+        imageBox.setId("createPostImageBox");
+
+        for (int i = 0; i < 25; i++) {
+            imageBox.getChildren().add(new Text("                                                                                                    " +
+                                                "                                                                          "));
+        }
+
+        root.getChildren().addAll(new Text("             "), imageBox, new Text("             "));
+
+        return root;
     }
 }

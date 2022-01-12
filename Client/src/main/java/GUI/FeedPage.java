@@ -67,10 +67,17 @@ public class FeedPage {
         verticalPadding(root);
         verticalPadding(root);
 
+        ArrayList<Post> newPostsList = new ArrayList<Post>();
         /* add posts */
         if(!hasFetched){
             postsList.addAll(Main.client.getPosts());
+            newPostsList = Main.client.getNewPosts();
             hasFetched = true;
+
+            if(newPostsList != null){
+                newPostsList.addAll(postsList);
+                postsList = newPostsList;
+            }
         }
         addPosts(root, postsList);
 
@@ -83,6 +90,13 @@ public class FeedPage {
 
             int numPosts = postsList.size();
             postsList.addAll(Main.client.getPosts());
+            ArrayList<Post> newPostsList2 = Main.client.getNewPosts();
+            hasFetched = true;
+
+            if(newPostsList2 != null && !newPostsList2.isEmpty()){
+                newPostsList2.addAll(postsList);
+                postsList = newPostsList2;
+            }
 
             /* if no more posts, add no more posts label */
             if(numPosts == postsList.size()){
@@ -337,6 +351,7 @@ public class FeedPage {
     }
 
     private void addPosts(VBox root, ArrayList<Post> posts){
+
 
         for(Post post: posts){
             if(!postsPosted.contains(post.getItemID())){

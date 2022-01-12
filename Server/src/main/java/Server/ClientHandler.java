@@ -6,9 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import ServerClientObjects.ImageExplorer;
 import ServerClientObjects.Post;
@@ -48,19 +46,14 @@ public class ClientHandler implements Runnable{
     /* post index */
     private int postIndex;
 
-    /* posts */
-    private List<String> posts;
-
-
-    private LinkedList<String> inMsgs;
+    private Integer numPosts;
 
     public ClientHandler(Socket socket, Server server, AtlasDB db) {
         this.socket = socket;
         this.server = server;
         this.db = db;
         gson = new GsonBuilder().create();
-        inMsgs = new LinkedList<String>();
-        postIndex = 0;
+        postIndex = -1;
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -131,6 +124,10 @@ public class ClientHandler implements Runnable{
 
             case "update rating":
                 updateRating();
+                break;
+
+            case "new posts":
+                sendNewPosts();
                 break;
 
             default:
@@ -241,40 +238,39 @@ public class ClientHandler implements Runnable{
 
     }
 
+
     private void sendPosts(){
 
-        ArrayList<Post> postsArray = new ArrayList<Post>();
 
         /* get all posts */
-        posts = db.getAllDocuments("Posts");
+        ArrayList<Post> postList = db.getPosts(postIndex);
+        if(!postList.isEmpty()) postIndex = Integer.parseInt( postList.get( postList.size()-1 ).getItemID() );
 
-        if(posts.size() > postIndex) {
-            /* put all posts into postsArray and put the imageArray into it */
-            int oldIndex = postIndex;
-            for (int i = oldIndex; i < oldIndex + 5; i++) {
-
-                /* get and update post */
-                Post post = gson.fromJson(posts.get(i), Post.class);
-                byte[] imageArray = ImageExplorer.convertImageToByteArray("src\\main\\resources\\Images\\" + post.getImgName(), ImageExplorer.getImageType(post.getImgName()));
-                post.setImageArray(imageArray);
-
-                /* add post to array */
-                postsArray.add(post);
-
-                postIndex++;
-
-                /* check if this is the last post */
-                if (posts.size() - 1 == i) break;
-            }
+        if(numPosts == null){
+            numPosts = Integer.parseInt( postList.get(0).getItemID() );
         }
 
-
         /* send the list of posts to client */
-        try { out.writeObject(encryption.Encrypt(postsArray)); }
+        try {
+            out.writeObject(encryption.Encrypt(postList));
+        }
 
         catch (IOException e) { e.printStackTrace(); }
     }
 
+    private void sendNewPosts(){
+
+        db.getAllDocuments("Posts");
+        /* get all posts */
+        ArrayList<Post> postList = db.fetchNewPosts(numPosts);
+
+        if(!postList.isEmpty() && postList != null) numPosts = Integer.parseInt( postList.get(0).getItemID() );
+
+        /* send the list of posts to client */
+        try { out.writeObject(encryption.Encrypt(postList)); }
+
+        catch (IOException e) { e.printStackTrace(); }
+    }
     private void updateRating(){
 
         Post post = null;

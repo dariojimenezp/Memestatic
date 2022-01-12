@@ -153,6 +153,24 @@ public class Client {
         return posts;
     }
 
+    public ArrayList<Post> getNewPosts(){
+
+        ArrayList<Post> posts = new ArrayList<Post>();
+        try {
+            /* ask for posts */
+            out.writeInt(1);
+            out.writeObject(encryption.Encrypt("new posts"));
+
+            /* get posts */
+            posts = encryption.Decrypt( (SealedObject) in.readObject(), ArrayList.class);
+        }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+        downloadImages(posts);
+        return posts;
+    }
+
     private void downloadImages(ArrayList<Post> posts){
 
         File directory = new File("target\\classes\\Images");

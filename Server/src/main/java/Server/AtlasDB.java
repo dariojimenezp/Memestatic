@@ -3,26 +3,20 @@ package Server;
 import Exceptions.CollectionNotFoundException;
 import Exceptions.DatabaseNotFoundException;
 import ServerClientObjects.Post;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.*;
 import static com.mongodb.client.model.Filters.*;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoIterable;
-import com.mongodb.client.model.Indexes;
-import javafx.geometry.Pos;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.json.JSONObject;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import com.mongodb.client.*;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+
+import java.util.*;
 
 public class AtlasDB {
 
@@ -135,7 +129,7 @@ public class AtlasDB {
 
     public synchronized void addPost(Post post, String id){
         Document postDocument = new Document("postName", post.getPostName()).append("postUser", post.getPostUser())
-                .append("imgName", post.getImgName()).append("itemID", id).append("ratingSum", 0).append("totalRatings", 0);
+                .append("imgName", post.getImgName()).append("itemID", Integer.valueOf(id) ).append("ratingSum", 0).append("totalRatings", 0);
 
         collections.get("Posts").insertOne(postDocument);
 
@@ -168,6 +162,61 @@ public class AtlasDB {
 
     }
 
+    public ArrayList<Post> getPosts(Integer postIndex){
 
+        AggregateIterable<Document> aggregate = null;
+
+        if(postIndex == 0 || postIndex == 1) return new ArrayList<Post>();;
+
+        if(postIndex > 0) {
+            aggregate = db.getCollection("Posts").aggregate(Arrays.asList(
+                    Aggregates.sort(Sorts.descending("itemID")),
+                    Aggregates.match(Filters.lt("itemID", postIndex)),
+                    Aggregates.limit(5)
+            ));
+        }
+
+        else {
+            aggregate = db.getCollection("Posts").aggregate(Arrays.asList(
+                    Aggregates.sort(Sorts.descending("itemID")),
+                    Aggregates.limit(5)
+            ));
+        }
+
+
+        Iterator<Document> i = aggregate.iterator();
+
+        /* put all posts in a list */
+        ArrayList<Post> list = new ArrayList<Post>();
+        Gson gson = new GsonBuilder().create();
+
+        while (i.hasNext()){
+            list.add(  gson.fromJson(i.next().toJson(), Post.class ));
+        }
+
+        return list;
+    }
+
+    public ArrayList<Post> fetchNewPosts(Integer postIndex){
+
+        if(postIndex <= 0) return new ArrayList<Post>();
+
+        AggregateIterable<Document> aggregate = db.getCollection("Posts").aggregate(Arrays.asList(
+                Aggregates.match(Filters.gt("itemID", postIndex)),
+                Aggregates.sort(Sorts.descending("itemID"))
+        ));
+
+        Iterator<Document> i = aggregate.iterator();
+
+        /* put all posts in a list */
+        ArrayList<Post> list = new ArrayList<Post>();
+        Gson gson = new GsonBuilder().create();
+
+        while (i.hasNext()){
+            list.add(  gson.fromJson(i.next().toJson(), Post.class ));
+        }
+
+        return list;
+    }
 
 }

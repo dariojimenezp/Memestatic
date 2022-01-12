@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 //TODO: create post UI

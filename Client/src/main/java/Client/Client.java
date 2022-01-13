@@ -210,4 +210,17 @@ public class Client {
         catch (IOException e) { e.printStackTrace(); }
 
     }
+
+    public void refreshPosts(){
+
+        ArrayList<Post> posts = new ArrayList<Post>();
+
+        try {
+            out.writeInt(1);
+            out.writeObject( encryption.Encrypt("reset posts"));
+        }
+
+        catch (IOException e) { e.printStackTrace(); }
+
+    }
 }

@@ -134,6 +134,10 @@ public class ClientHandler implements Runnable{
                 addComment();
                 break;
 
+            case "reset posts":
+                resetPosts();
+                break;
+
             default:
                 System.out.println("Invalid message");
                 return;
@@ -300,8 +304,11 @@ public class ClientHandler implements Runnable{
         }
         catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
+    }
 
+    private void resetPosts(){
 
+        postIndex = -1;
     }
 
 

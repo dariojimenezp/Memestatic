@@ -48,6 +48,8 @@ public class FeedPage {
 
     private Boolean isFeedPageOn;
 
+    private Boolean isRefresh;
+
     public FeedPage(User user){
 
         postsList = new ArrayList<Post>();
@@ -55,6 +57,7 @@ public class FeedPage {
         hasFetched =  false;
         isCommentOpened = false;
         isFeedPageOn = false;
+        isRefresh = false;
         createFeedPage();
     }
 
@@ -70,18 +73,27 @@ public class FeedPage {
         verticalPadding(root);
         verticalPadding(root);
 
-        ArrayList<Post> newPostsList = new ArrayList<Post>();
         /* add posts */
-        if(!hasFetched){
+        ArrayList<Post> newPostsList = new ArrayList<Post>();
+
+        /* refresh */
+        if(isRefresh){
+            postsList.clear();
+            Main.client.refreshPosts();
+            isRefresh = false;
+        }
+
+        if (!hasFetched) {
             postsList.addAll(Main.client.getPosts());
             newPostsList = Main.client.getNewPosts();
             hasFetched = true;
 
-            if(newPostsList != null){
+            if (newPostsList != null || newPostsList.isEmpty()) {
                 newPostsList.addAll(postsList);
                 postsList = newPostsList;
             }
         }
+
         addPosts(root, postsList);
 
         /* button to add more posts */
@@ -153,7 +165,6 @@ public class FeedPage {
         root.getChildren().addAll(logo, memestaticLabel, topBarPadding(), feedLabel);
 
 
-
         /* if user is not logged in, put log in and create account buttons */
         if(user == null){
             /* log in button */
@@ -194,6 +205,9 @@ public class FeedPage {
         homePane.setOnMouseExited(event -> homePane.setStyle("-fx-background-color: white"));
 
         homePane.setOnMouseClicked(event -> {
+            isRefresh = true;
+            hasFetched = false;
+            postsPosted.clear();
             if(isFeedPageOn) closeFeedPage();
             else stage.close();
             createFeedPage();
@@ -597,9 +611,7 @@ public class FeedPage {
 
     private void closeFeedPage(){
         stage.close();
-        for(Post post: postsList){
-            postsPosted.clear();
-        }
+        postsList.clear();
 
         isFeedPageOn = false;
     }

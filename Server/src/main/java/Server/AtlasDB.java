@@ -222,7 +222,7 @@ public class AtlasDB {
                 new Document("$push", new Document("comments", comment) ));
 
         collections.get("Posts").updateOne( eq("itemID", Integer.valueOf(post.getItemID())),
-                new Document("$push", new Document("commentUser", user) ));
+                new Document("$push", new Document("commentUsers", user) ));
 
     }
 

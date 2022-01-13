@@ -111,7 +111,7 @@ public class ClientHandler implements Runnable{
                 break;
 
             case "log in":
-                logIn(getStrings(numObjects));
+                logIn();
                 break;
 
             case "post":
@@ -146,6 +146,10 @@ public class ClientHandler implements Runnable{
                 findPosts();
                 break;
 
+            case "get user":
+                sendUser();
+                break;
+
             default:
                 System.out.println("Invalid message");
                 return;
@@ -176,6 +180,7 @@ public class ClientHandler implements Runnable{
 
     }
 
+
     private LinkedList<String> getStrings(Integer numObjects){
 
         LinkedList<String> strings = new LinkedList<String>();
@@ -190,25 +195,24 @@ public class ClientHandler implements Runnable{
         return strings;
     }
 
-    private void logIn(LinkedList<String> msgs){
+    private void logIn(){
 
-        String username = msgs.pop();
-        String password = msgs.pop();
-
-        if(db.findDocument("Users", "username", username) == null || !validatePassword(username, password)) {
-            try {
-                out.writeInt(1);
-                out.writeObject(encryption.Encrypt("not logged in"));
-                return;
-            }
-            catch (IOException e) { e.printStackTrace(); }
-        }
 
         try {
-            out.writeInt(1);
-            out.writeObject(encryption.Encrypt("logged in"));
+            String username = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+            String password = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+
+            User user = db.getUser(username);
+            if(user == null || !validatePassword(username, password)){
+                out.writeObject(encryption.Encrypt(null));
+                return;
+            }
+
+            out.writeObject(encryption.Encrypt(user));
         }
-        catch (IOException e) { e.printStackTrace(); }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
     }
 
     private Boolean validatePassword(String username, String password){
@@ -339,6 +343,18 @@ public class ClientHandler implements Runnable{
         }
 
         catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+    }
+
+    private void sendUser(){
+
+        try {
+            String username = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+            User user = db.getUser(username);
+            out.writeObject(encryption.Encrypt(user));
+        }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
     }
 
 

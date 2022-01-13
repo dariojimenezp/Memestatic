@@ -80,21 +80,21 @@ public class Client {
         else return false;
     }
 
-    public Boolean logIn(String username, String password){
+    public User logIn(String username, String password){
 
+        User user = null;
         try {
             out.writeInt(3);
             out.writeObject(encryption.Encrypt("log in"));
             out.writeObject(encryption.Encrypt(username));
             out.writeObject(encryption.Encrypt(password));
+
+            user = encryption.Decrypt( (SealedObject) in.readObject(), User.class);
+
         }
-        catch (IOException e) { e.printStackTrace(); }
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
-        LinkedList msgs = receiveMsgs();
-
-        if(msgs.pop().equals("logged in")) return true;
-
-        else return false;
+        return user;
 
     }
 
@@ -256,5 +256,21 @@ public class Client {
         catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
         return posts;
+    }
+
+    public User getUser(String username){
+
+        User user = null;
+        try {
+            out.writeInt(2);
+            out.writeObject( encryption.Encrypt("get user"));
+            out.writeObject( encryption.Encrypt(username));
+
+            user = encryption.Decrypt( (SealedObject) in.readObject(), User.class);
+        }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+        return user;
     }
 }

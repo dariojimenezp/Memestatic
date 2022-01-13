@@ -3,6 +3,7 @@ package Server;
 import Exceptions.CollectionNotFoundException;
 import Exceptions.DatabaseNotFoundException;
 import ServerClientObjects.Post;
+import ServerClientObjects.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.*;
@@ -264,6 +265,16 @@ public class AtlasDB {
         }
 
         return posts;
+    }
+
+    public synchronized User getUser(String username){
+
+        FindIterable<Document> doc = collections.get("Users").find( eq("username", username));
+        Iterator<Document> it = doc.iterator();
+
+        if(it.hasNext()) return new GsonBuilder().create().fromJson( it.next().toJson(), User.class);
+
+        return null;
     }
 
 }

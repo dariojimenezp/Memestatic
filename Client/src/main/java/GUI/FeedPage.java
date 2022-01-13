@@ -58,8 +58,7 @@ public class FeedPage {
         isCommentOpened = false;
         isFeedPageOn = false;
         isRefresh = false;
-        this.user.addPublishedPost("1");
-        this.user.addPublishedPost("2");
+        this.user = user;
         createFeedPage();
     }
 

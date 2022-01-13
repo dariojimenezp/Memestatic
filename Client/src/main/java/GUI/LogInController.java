@@ -2,6 +2,7 @@ package GUI;
 
 import Client.Main;
 import Hashing.Hashing;
+import ServerClientObjects.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -110,9 +111,10 @@ public class LogInController {
         }
 
         /* check if account if log in successful */
-        if(Main.client.logIn(username, password)){
+        User user = Main.client.logIn(username, password);
+        if(user != null){
             closeStage();
-            System.out.println("Logged in");
+            new FeedPage(user);
             return;
         }
 

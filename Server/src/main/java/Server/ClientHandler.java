@@ -130,6 +130,10 @@ public class ClientHandler implements Runnable{
                 sendNewPosts();
                 break;
 
+            case "add comment":
+                addComment();
+                break;
+
             default:
                 System.out.println("Invalid message");
                 return;
@@ -283,6 +287,20 @@ public class ClientHandler implements Runnable{
         catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
         db.updateRating(post, username);
+
+    }
+
+    private void addComment(){
+
+        try {
+            String comment = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+            String user = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+            Post post = encryption.Decrypt( (SealedObject) in.readObject(), Post.class);
+            db.addComment(comment, user, post);
+        }
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+
 
     }
 

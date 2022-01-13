@@ -195,4 +195,19 @@ public class Client {
         }
         catch (IOException e) {  e.printStackTrace(); }
     }
+
+
+    public void addComment(String comment, String user, Post post){
+
+        try {
+            out.writeInt(4);
+            out.writeObject( encryption.Encrypt("add comment"));
+            out.writeObject( encryption.Encrypt(comment));
+            out.writeObject( encryption.Encrypt(user));
+            out.writeObject( encryption.Encrypt(post));
+        }
+
+        catch (IOException e) { e.printStackTrace(); }
+
+    }
 }

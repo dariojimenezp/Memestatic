@@ -135,10 +135,6 @@ public class AtlasDB {
 
     }
 
-    public synchronized void addComment(String post, String comment){
-
-        //collections.get("Post").updateOne( eq("postName"))
-    }
 
     public synchronized String getImageID(){
         /* get imageID */
@@ -162,7 +158,7 @@ public class AtlasDB {
 
     }
 
-    public ArrayList<Post> getPosts(Integer postIndex){
+    public synchronized ArrayList<Post> getPosts(Integer postIndex){
 
         AggregateIterable<Document> aggregate = null;
 
@@ -197,7 +193,7 @@ public class AtlasDB {
         return list;
     }
 
-    public ArrayList<Post> fetchNewPosts(Integer postIndex){
+    public synchronized ArrayList<Post> fetchNewPosts(Integer postIndex){
 
         if(postIndex <= 0) return new ArrayList<Post>();
 
@@ -218,5 +214,17 @@ public class AtlasDB {
 
         return list;
     }
+
+    public synchronized void addComment(String comment, String user, Post post){
+
+        /* add comment to post */
+        collections.get("Posts").updateOne( eq("itemID", Integer.valueOf(post.getItemID())),
+                new Document("$push", new Document("comments", comment) ));
+
+        collections.get("Posts").updateOne( eq("itemID", Integer.valueOf(post.getItemID())),
+                new Document("$push", new Document("commentUser", user) ));
+
+    }
+
 
 }

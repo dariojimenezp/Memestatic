@@ -597,11 +597,31 @@ public class FeedPage {
         Button addCommentButton = new Button("Add Comment");
         addCommentButton.setId("addCommentButton");
 
+
         /* all comments box */
         VBox allCommentBox = new VBox();
         allCommentBox.setAlignment(Pos.CENTER);
         allCommentBox.setId("postBox");
         allCommentBox.getChildren().addAll( new Text(""), addCommentBox, new Text(""), addCommentButton, new Text(""));
+
+        /* add comment button handler */
+        addCommentButton.setOnAction(event -> {
+
+            if(commentField.getText().isEmpty()){
+                allCommentBox.getChildren().remove(2);
+                Label noTextWarning = new Label("You have to enter a valid comment!");
+                noTextWarning.setId("unsuccessfulLabel");
+                allCommentBox.getChildren().add(2, noTextWarning);
+                return;
+            }
+
+            Main.client.addComment(commentField.getText(), user.getUsername(), post);
+            allCommentBox.getChildren().remove(2);
+            Label noTextWarning = new Label("successfully uploaded comment!");
+            noTextWarning.setId("successfulLabel");
+            allCommentBox.getChildren().add(2, noTextWarning);
+
+        });
 
         /* add comments */
         if(post.getComments() != null && !post.getComments().isEmpty()){

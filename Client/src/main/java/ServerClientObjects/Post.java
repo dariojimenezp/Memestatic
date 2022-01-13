@@ -14,6 +14,8 @@ public class Post implements Serializable {
 
     /* comments */
     private ArrayList<String> comments;
+    private ArrayList<String> commentUsers;
+
 
     /* rating info */
     private Double rating;
@@ -33,6 +35,7 @@ public class Post implements Serializable {
         totalRatings = 0;
         rating = 0.0;
         comments = new ArrayList<String>();
+        commentUsers =  new ArrayList<String>();
     }
 
     public void addRating(Double rating){
@@ -41,8 +44,9 @@ public class Post implements Serializable {
         this.rating = ratingSum/totalRatings;
     }
 
-    public void addComment(String comment){
+    public void addComment(String comment, String user){
         comments.add(comment);
+        commentUsers.add(user);
     }
 
     /** getters **/
@@ -56,6 +60,10 @@ public class Post implements Serializable {
 
     public ArrayList<String> getComments() {
         return comments;
+    }
+
+    public ArrayList<String> getCommentUsers() {
+        return commentUsers;
     }
 
     public Double getRating() {
@@ -81,6 +89,8 @@ public class Post implements Serializable {
     public Integer getTotalRatings() {
         return totalRatings;
     }
+
+
 
     /** setters **/
     public void setImgName(String imgName) {

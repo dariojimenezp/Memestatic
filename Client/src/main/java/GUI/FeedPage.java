@@ -15,12 +15,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 //TODO: enable user to rate post again, but have it just replace the old rating with the new rating
@@ -47,11 +44,14 @@ public class FeedPage {
 
     private Boolean hasFetched;
 
+    private Boolean isCommentOpened;
+
     public FeedPage(User user){
 
         postsList = new ArrayList<Post>();
         postsPosted = new HashSet<String>();
         hasFetched =  false;
+        isCommentOpened = false;
         createFeedPage();
     }
 
@@ -268,7 +268,7 @@ public class FeedPage {
         imageView.setFitWidth(40);
 
         /* comment label */
-        Label commentLabel = new Label(" 300 comments");
+        Label commentLabel = new Label(post.getComments() == null ? "0 Comments" : post.getComments().size() + " Comments");
         commentLabel.setId("commentLabel");
 
         /* comment box */
@@ -289,6 +289,7 @@ public class FeedPage {
 
         rateButton.setOnMouseExited(event -> rateButton.setStyle("-fx-background-color: #454545"));
 
+
         /* text field */
         VBox rateFieldBox = new VBox();
         TextField rateField = new TextField();
@@ -296,7 +297,6 @@ public class FeedPage {
 
         /* button handler */
         rateButton.setOnAction(event -> {
-
 
             try{
 
@@ -329,9 +329,12 @@ public class FeedPage {
                 new Text("                                                              "), ratingBox);
 
         /* handler if clicked */
-        commentBox.setOnMouseClicked(event -> {
-            //TODO
-        });
+        if(!isCommentOpened) {
+            commentBox.setOnMouseClicked(event -> {
+                closeFeedPage();
+                commentPage(post);
+            });
+        }
 
         commentBox.setOnMouseEntered(event -> commentBox.setStyle("-fx-background-color: #454545"));
 
@@ -572,4 +575,98 @@ public class FeedPage {
             postsPosted.clear();
         }
     }
+
+    private void commentPage(Post post){
+
+        /* root */
+        VBox root = new VBox();
+        root.setId("rootBox");
+        isCommentOpened = true;
+
+        /* add top bar */
+        root.getChildren().addAll(topBar(), new Text(""), new Text(""), post(post), new Text(""));
+
+
+        /* add comment box */
+        TextArea commentField = new TextArea();
+        commentField.setPromptText("Add a comment");
+        commentField.setId("commentField");
+        HBox addCommentBox = new HBox();
+        addCommentBox.getChildren().addAll(new Text("    "), commentField, new Text("    "));
+
+        Button addCommentButton = new Button("Add Comment");
+        addCommentButton.setId("addCommentButton");
+
+        /* all comments box */
+        VBox allCommentBox = new VBox();
+        allCommentBox.setAlignment(Pos.CENTER);
+        allCommentBox.setId("postBox");
+        allCommentBox.getChildren().addAll( new Text(""), addCommentBox, new Text(""), addCommentButton, new Text(""));
+
+        /* add comments */
+        if(post.getComments() != null && !post.getComments().isEmpty()){
+            for (int i = 0; i < post.getComments().size(); i++) {
+
+                VBox commentBox = new VBox();
+
+                /* get comment and user string */
+                String comment = post.getComments().get(i);
+                String user = post.getCommentUsers().get(i);
+
+                /* divide comment into 95 character long lines */
+                int numLines = comment.length()/85 + 1;
+                String[] lines = new String[numLines];
+                for (int j = 0; j < numLines; j++) {
+
+                    if(j == numLines-1) lines[j] = comment.substring(j*86);
+                    else lines[j] = comment.substring(j*86, (j+1)*86);
+
+                    Label commentLabel = new Label(lines[j]);
+                    commentLabel.setId("commentText");
+                    commentBox.getChildren().add(commentLabel);
+                }
+
+
+                /* user label */
+                Label userLabel = new Label( "  " + user);
+                userLabel.setId("commentUserLabel");
+                HBox userBox = new HBox();
+                userBox.setAlignment(Pos.CENTER_LEFT);
+                userBox.getChildren().addAll(userLabel);
+
+                /* box where comment will be */
+                commentBox.setId("createPostImageBox");
+                commentBox.setAlignment(Pos.CENTER_LEFT);
+                commentBox.getChildren().addAll(new Text("                                                                                                                            " +
+                                "                                                                  "));
+
+                /* box for padding */
+                HBox paddingBox = new HBox();
+                paddingBox.getChildren().addAll(new Text("     "), commentBox, new Text("     "));
+
+
+                allCommentBox.getChildren().addAll( userBox, paddingBox, new Text(""));
+            }
+        }
+
+        HBox paddingBox = new HBox();
+        paddingBox.getChildren().addAll(horizontalPadding(), new Text("    "), allCommentBox, new Text("    "), horizontalPadding());
+        root.getChildren().addAll(paddingBox);
+
+        /* add scroll pane */
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(root);
+
+        /* sets up scene */
+        Scene scene = new Scene(scrollPane, 1920, 980);
+        scene.getStylesheets().add(GUI.class.getResource("/Styles/Feed.css").toExternalForm());
+
+        /* sets up stage */
+        stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+
+
+    }
+
 }

@@ -129,3 +129,31 @@
     -fx-progress-color: transparent;
     -fx-color-label-visible: transparent;
 }
+
+#commentField{
+    -fx-min-width: 780px;
+    -fx-max-height: 100px;
+    -fx-highlight-fill: transparent;
+    -fx-font-family: "OCR A Extended";
+    -fx-prompt-text-fill: #787878;
+    -fx-text-fill: white;
+    -fx-control-inner-background:  #454545;
+}
+
+#addCommentButton{
+    -fx-font-size: 20px;
+    -fx-background-color: #5B49F5;
+    -fx-text-fill: white;
+}
+
+#commentText{
+    -fx-font-family: "OCR A Extended";
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+#commentUserLabel{
+    -fx-font-family: "OCR A Extended";
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+}

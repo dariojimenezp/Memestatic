@@ -133,10 +133,14 @@ public class AtlasDB {
     }
 
     public synchronized void addPost(Post post, String id){
+
+        /* create post document and add it to the posts collection */
         Document postDocument = new Document("postName", post.getPostName()).append("postUser", post.getPostUser())
                 .append("imgName", post.getImgName()).append("itemID", Integer.valueOf(id) ).append("ratingSum", 0).append("totalRatings", 0);
-
         collections.get("Posts").insertOne(postDocument);
+
+        /* add post to user's post history */
+        collections.get("Users").updateOne( eq("username", post.getPostUser()), new Document("$push", new Document("PostHistory", id)) );
 
     }
 

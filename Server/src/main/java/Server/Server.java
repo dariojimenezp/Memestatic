@@ -30,6 +30,8 @@ public class Server {
         this.PORT = PORT;
 
         db = new AtlasDB(dbConnectionString, dbName);
+
+        db.search("lol");
     }
 
 

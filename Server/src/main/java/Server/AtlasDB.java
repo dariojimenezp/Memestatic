@@ -9,9 +9,7 @@ import com.mongodb.*;
 import static com.mongodb.client.model.Filters.*;
 
 import com.mongodb.client.*;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -60,6 +58,12 @@ public class AtlasDB {
             collections.put(collection, db.getCollection("Posts"));
             collection = "ImageID";
             collections.put(collection, db.getCollection("ImageID"));
+
+
+            /* create indexes for searching posts */
+            collections.get("Posts").createIndex(Indexes.text("postName"));
+            //collections.get("Posts").createIndex(Indexes.text("postUser"));
+
 
 
         }catch (Exception e){
@@ -224,6 +228,21 @@ public class AtlasDB {
         collections.get("Posts").updateOne( eq("itemID", Integer.valueOf(post.getItemID())),
                 new Document("$push", new Document("commentUsers", user) ));
 
+    }
+
+    public synchronized ArrayList<Post> search(String str){
+
+        FindIterable<Document> list = collections.get("Posts").find( Filters.text(str)).projection(Projections.metaTextScore("score")).sort(Sorts.metaTextScore("score"));
+
+        Iterator<Document> i = list.iterator();
+        ArrayList<Post> posts = new ArrayList<Post>();
+        Gson gson = new GsonBuilder().create();
+
+        while (i.hasNext()){
+            posts.add( gson.fromJson( i.next().toJson(), Post.class));
+        }
+
+        return posts;
     }
 
 

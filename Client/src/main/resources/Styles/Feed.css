@@ -157,3 +157,17 @@
     -fx-text-fill: white;
     -fx-font-size: 20px;
 }
+
+#searchField{
+     -fx-min-width: 300px;
+     -fx-highlight-fill: transparent;
+     -fx-font-family: "OCR A Extended";
+     -fx-prompt-text-fill: #5B49F5;
+     -fx-text-fill: #5B49F5;
+    -fx-background-color: white;
+ }
+
+#searchPane{
+    -fx-background-color: #5B49F5;
+    -fx-background-radius: 35px;
+}

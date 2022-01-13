@@ -223,4 +223,20 @@ public class Client {
         catch (IOException e) { e.printStackTrace(); }
 
     }
+
+    public ArrayList<Post> search(String str){
+
+        ArrayList<Post> posts = new ArrayList<Post>();
+        try {
+            out.writeInt(1);
+            out.writeObject( encryption.Encrypt("search"));
+            out.writeObject( encryption.Encrypt(str));
+
+            posts = encryption.Decrypt( (SealedObject) in.readObject(), ArrayList.class);
+        }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+        return posts;
+    }
 }

@@ -159,10 +159,27 @@ public class FeedPage {
         /* feed label */
         Label feedLabel = new Label("Meme Feed");
 
+        /* search field */
+        StackPane searchPane = new StackPane();
+        ImageView searchImage = new ImageView(new Image(String.valueOf(getClass().getResource("/Images/search.png"))));
+        searchImage.setFitHeight(35);
+        searchImage.setFitWidth(35);
+        searchPane.getChildren().add(searchImage);
+        searchPane.setId("searchPane");
+
+        /* create post handlers */
+        searchPane.setOnMouseEntered(event -> searchPane.setStyle("-fx-background-color: #5040db"));
+
+        searchPane.setOnMouseExited(event -> searchPane.setStyle("-fx-background-color: #5B49F5"));
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search");
+        searchField.setId("searchField");
+
         /* root */
         HBox root = new HBox();
         root.setId("topBarBox");
-        root.getChildren().addAll(logo, memestaticLabel, topBarPadding(), feedLabel);
+        root.getChildren().addAll(logo, memestaticLabel, topBarPadding(), searchPane, new Text(" "), searchField);
 
 
         /* if user is not logged in, put log in and create account buttons */
@@ -251,8 +268,7 @@ public class FeedPage {
     }
 
     private Text topBarPadding(){
-        return new Text("                                                                                                           " +
-                "                                   ");
+        return new Text("                                                                                                                         ");
     }
 
     private HBox post(Post post){

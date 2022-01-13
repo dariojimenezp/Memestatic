@@ -46,12 +46,15 @@ public class FeedPage {
 
     private Boolean isCommentOpened;
 
+    private Boolean isFeedPageOn;
+
     public FeedPage(User user){
 
         postsList = new ArrayList<Post>();
         postsPosted = new HashSet<String>();
         hasFetched =  false;
         isCommentOpened = false;
+        isFeedPageOn = false;
         createFeedPage();
     }
 
@@ -129,6 +132,8 @@ public class FeedPage {
         stage = new Stage();
         stage.setScene(scene);
         stage.show();
+
+        isFeedPageOn = true;
     }
 
     private HBox topBar(){
@@ -170,8 +175,29 @@ public class FeedPage {
             root.getChildren().addAll( topBarPadding(), logInButton, new Text("      "), createAccountButton);
         }
 
-        else root.getChildren().addAll(topBarPadding(), new Text("                                                    "));
+        else root.getChildren().addAll(topBarPadding(), new Text("                                     "));
 
+        /* home button */
+        StackPane homePane  = new StackPane();
+        ImageView homeButton = new ImageView(new Image(String.valueOf(getClass().getResource("/Images/home.png"))));
+        homeButton.setFitWidth(35);
+        homeButton.setFitHeight(35);
+        roundImage(homeButton , 35, 35);
+
+        /* add image to pane */
+        homePane.getChildren().add(homeButton);
+        homePane.setId("createPostPane");
+
+        /* create post handlers */
+        homePane.setOnMouseEntered(event -> homePane.setStyle("-fx-background-color: #e6e6e6"));
+
+        homePane.setOnMouseExited(event -> homePane.setStyle("-fx-background-color: white"));
+
+        homePane.setOnMouseClicked(event -> {
+            if(isFeedPageOn) closeFeedPage();
+            else stage.close();
+            createFeedPage();
+        });
 
         /* create post */
         StackPane createPostPane  = new StackPane();
@@ -204,7 +230,7 @@ public class FeedPage {
         profileLogo.setOnMouseClicked(event -> {
 
         });
-        root.getChildren().addAll(createPostPane, new Text("      "), profileLogo);
+        root.getChildren().addAll( homePane, new Text("      "), createPostPane, new Text("      "), profileLogo);
 
 
         return root;
@@ -574,6 +600,8 @@ public class FeedPage {
         for(Post post: postsList){
             postsPosted.clear();
         }
+
+        isFeedPageOn = false;
     }
 
     private void commentPage(Post post){

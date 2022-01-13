@@ -17,14 +17,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-//TODO: create post UI
-//TODO: user logged in UI
-//TODO: comments UI
+//TODO: fix comment box
 //TODO: profile
-//TODO: search
+//TODO: test search
 public class Main extends Application {
 
-    private static final int IMAGE_MAX_SIZE = 32000000;
     public static Client client;
 
     public static void main(String[] args) {

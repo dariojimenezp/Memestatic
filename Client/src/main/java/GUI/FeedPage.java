@@ -58,6 +58,8 @@ public class FeedPage {
         isCommentOpened = false;
         isFeedPageOn = false;
         isRefresh = false;
+        this.user.addPublishedPost("1");
+        this.user.addPublishedPost("2");
         createFeedPage();
     }
 
@@ -268,7 +270,8 @@ public class FeedPage {
 
         //handler todo: profile logo
         profileLogo.setOnMouseClicked(event -> {
-
+            closeFeedPage();
+            createPostHistory();
         });
         root.getChildren().addAll( homePane, new Text("      "), createPostPane, new Text("      "), profileLogo);
 
@@ -590,7 +593,7 @@ public class FeedPage {
 
             /* upload post */
             Post post = new Post(title, user.getUsername(), ImageExplorer.convertImageToByteArray(uploadedImagePath, ImageExplorer.getImageType(uploadedImagePath)));
-            Main.client.publishPost(post, uploadedImagePath);
+            String imageID = Main.client.publishPost(post, uploadedImagePath);
             postBox.getChildren().remove(postBox.getChildren().size()-1);
             postBox.getChildren().removeAll(uploadPicBox, bottomBox, titleField);
 
@@ -606,6 +609,7 @@ public class FeedPage {
 
             postBox.getChildren().addAll(warning, homeButton, new Text(""));
             hasFetched = false;
+            user.addPublishedPost(imageID);
         });
 
         /* add everything to post box */
@@ -761,13 +765,16 @@ public class FeedPage {
         VBox root = new VBox();
         root.setId("rootBox");
         root.setAlignment(Pos.TOP_CENTER);
+
         /* add top bar */
         root.getChildren().addAll(topBar(), new Text(""));
 
+        /* add posts */
         for(Post post: posts){
             root.getChildren().addAll(post(post), new Text(""));
         }
 
+        /* add padding to complete page if there is only one post */
         if(posts.size() == 1){
             root.getChildren().addAll(new Text(), new Text(), new Text(), new Text(), new Text());
         }
@@ -782,4 +789,41 @@ public class FeedPage {
         stage.show();
     }
 
+    private void createPostHistory(){
+        /* root */
+        VBox root = new VBox();
+        root.setId("rootBox");
+        root.setAlignment(Pos.TOP_CENTER);
+
+        /* add top bar */
+        root.getChildren().addAll(topBar(), new Text(""));
+
+        if(user.getPostHistory() == null || user.getPostHistory().isEmpty()) {
+            Label noPostsLabel = new Label("No Posts");
+            root.getChildren().addAll(noPostsLabel, new Text());
+            return;
+        }
+
+        ArrayList<Post> posts = Main.client.findPosts(user.getPostHistory());
+
+        /* add posts */
+        for(Post post : posts){
+            root.getChildren().addAll(post(post), new Text());
+        }
+
+        /* add padding to complete page if there is only one post */
+        if(posts.size() == 1){
+            root.getChildren().addAll(new Text(), new Text(), new Text(), new Text(), new Text());
+        }
+
+        /* scroll pane */
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(root);
+
+        /* set up scene and stage */
+        Scene scene = new Scene(scrollPane, 1920, 980);
+        scene.getStylesheets().add(GUI.class.getResource("/Styles/Feed.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
+    }
 }

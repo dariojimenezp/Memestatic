@@ -10,6 +10,7 @@ import static com.mongodb.client.model.Filters.*;
 
 import com.mongodb.client.*;
 import com.mongodb.client.model.*;
+import javafx.geometry.Pos;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -245,5 +246,20 @@ public class AtlasDB {
         return posts;
     }
 
+
+    public synchronized ArrayList<Post> findPosts(ArrayList<String> itemIDs){
+
+        ArrayList<Post> posts = new ArrayList<Post>();
+        Gson gson = new GsonBuilder().create();
+
+        for(String itemID: itemIDs){
+            FindIterable<Document> doc = collections.get("Posts").find( eq("itemID", Integer.valueOf(itemID)) );
+            Iterator<Document> it = doc.iterator();
+
+            if(it.hasNext()) posts.add( gson.fromJson(it.next().toJson(), Post.class));
+        }
+
+        return posts;
+    }
 
 }

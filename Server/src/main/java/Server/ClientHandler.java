@@ -142,6 +142,10 @@ public class ClientHandler implements Runnable{
                 searchPosts();
                 break;
 
+            case "find posts":
+                findPosts();
+                break;
+
             default:
                 System.out.println("Invalid message");
                 return;
@@ -320,6 +324,17 @@ public class ClientHandler implements Runnable{
         try {
             String str = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
             ArrayList<Post> posts = db.search(str);
+            out.writeObject(encryption.Encrypt(posts));
+        }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+    }
+
+    private void findPosts(){
+
+        try {
+            ArrayList<String> itemIDs = encryption.Decrypt( (SealedObject) in.readObject(), ArrayList.class);
+            ArrayList<Post> posts = db.findPosts(itemIDs);
             out.writeObject(encryption.Encrypt(posts));
         }
 

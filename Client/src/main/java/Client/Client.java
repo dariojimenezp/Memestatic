@@ -116,8 +116,9 @@ public class Client {
         return msgs;
     }
 
-    public void publishPost(Post post, String path){
+    public String publishPost(Post post, String path){
 
+        String imageID = null;
 
         try {
 
@@ -128,11 +129,12 @@ public class Client {
             out.writeObject(encryption.Encrypt(ImageExplorer.getImageType(path)));
 
             /*receive the image id and download image to src folder */
-            String imageID = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+            imageID = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
             ImageExplorer.downloadImage(imageID, ImageExplorer.getImageType(path), post.getImageArray(), ImageExplorer.Project.CLIENT);
         }
         catch (IOException | ClassNotFoundException e) { e.printStackTrace();}
 
+        return imageID;
     }
 
     public ArrayList<Post> getPosts(){
@@ -228,9 +230,25 @@ public class Client {
 
         ArrayList<Post> posts = new ArrayList<Post>();
         try {
-            out.writeInt(1);
+            out.writeInt(2);
             out.writeObject( encryption.Encrypt("search"));
             out.writeObject( encryption.Encrypt(str));
+
+            posts = encryption.Decrypt( (SealedObject) in.readObject(), ArrayList.class);
+        }
+
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+        return posts;
+    }
+
+    public ArrayList<Post> findPosts(ArrayList<String> itemIDs){
+
+        ArrayList<Post> posts = new ArrayList<Post>();
+        try {
+            out.writeInt(2);
+            out.writeObject( encryption.Encrypt("find posts"));
+            out.writeObject( encryption.Encrypt(itemIDs));
 
             posts = encryption.Decrypt( (SealedObject) in.readObject(), ArrayList.class);
         }

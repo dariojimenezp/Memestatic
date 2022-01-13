@@ -67,6 +67,7 @@ public class FeedPage {
         /* root */
         VBox root = new VBox();
         root.setId("rootBox");
+        root.setAlignment(Pos.TOP_CENTER);
 
         /* add top bar */
         root.getChildren().add(topBar());
@@ -560,6 +561,9 @@ public class FeedPage {
         Button cancelButton = new Button("Cancel");
         cancelButton.setId("createPostButtons");
         cancelButton.setOnAction(event -> {
+            isRefresh = true;
+            hasFetched = false;
+            postsPosted.clear();
             stage.close();
             createFeedPage();
         });
@@ -567,7 +571,7 @@ public class FeedPage {
         /* hbox for post and cancel buttons */
         HBox bottomBox = new HBox();
         bottomBox.setId("bottomCreatePostBox");
-        bottomBox.getChildren().addAll(cancelButton, new Text("  "), postButton);
+        bottomBox.getChildren().addAll(cancelButton, new Text("     "), postButton, new Text("   "));
         bottomBox.setAlignment(Pos.CENTER_RIGHT);
 
         postButton.setOnAction(event -> {
@@ -583,6 +587,7 @@ public class FeedPage {
                 return;
             }
 
+            /* title too long */
             if(title.length() > MAX_TITLE_LENGTH){
                 if(uploadPicBox.getChildren().size() == 2) uploadPicBox.getChildren().remove(1);
                 Label warning = new Label("Max title length is" + MAX_TITLE_LENGTH + "!");
@@ -596,7 +601,6 @@ public class FeedPage {
             String imageID = Main.client.publishPost(post, uploadedImagePath);
             postBox.getChildren().remove(postBox.getChildren().size()-1);
             postBox.getChildren().removeAll(uploadPicBox, bottomBox, titleField);
-
             Label warning = new Label("successfully published!");
             warning.setId("successfulLabel");
 

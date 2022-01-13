@@ -175,6 +175,15 @@ public class FeedPage {
         TextField searchField = new TextField();
         searchField.setPromptText("Search");
         searchField.setId("searchField");
+        searchPane.setOnMouseClicked(event -> {
+            String string = searchField.getText();
+
+            if(string.isEmpty()) return;
+
+            ArrayList<Post> posts = Main.client.search(string);
+            closeFeedPage();
+            showSearchedPosts(posts);
+        });
 
         /* root */
         HBox root = new HBox();
@@ -266,6 +275,7 @@ public class FeedPage {
 
         return root;
     }
+
 
     private Text topBarPadding(){
         return new Text("                                                                                                                         ");
@@ -743,6 +753,33 @@ public class FeedPage {
         stage.show();
 
 
+    }
+
+    private void showSearchedPosts(ArrayList<Post> posts){
+
+        /* root */
+        VBox root = new VBox();
+        root.setId("rootBox");
+        root.setAlignment(Pos.TOP_CENTER);
+        /* add top bar */
+        root.getChildren().addAll(topBar(), new Text(""));
+
+        for(Post post: posts){
+            root.getChildren().addAll(post(post), new Text(""));
+        }
+
+        if(posts.size() == 1){
+            root.getChildren().addAll(new Text(), new Text(), new Text(), new Text(), new Text());
+        }
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(root);
+
+        Scene scene = new Scene(scrollPane, 1920, 980);
+        scene.getStylesheets().add(GUI.class.getResource("/Styles/Feed.css").toExternalForm());
+
+        stage.setScene(scene);
+        stage.show();
     }
 
 }

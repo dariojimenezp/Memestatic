@@ -289,7 +289,7 @@ public class FeedPage {
         /* bar */
         MenuBar accountBar = new MenuBar(account);
 
-        root.getChildren().addAll(accountBar);
+        root.getChildren().addAll(new Text("                        "), homePane, new Text("    "), createPostPane, new Text("  "), accountBar);
 
 
         return root;

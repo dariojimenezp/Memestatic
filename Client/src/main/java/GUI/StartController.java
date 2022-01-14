@@ -25,8 +25,8 @@ public class StartController {
      * Handler for start button
      */
     public void StartButtonHandler(){
-        createAccountButton.setText("No");
-        System.out.println("l");
+        closeStage();
+        new FeedPage(null);
     }
 
     /** Handlers for log in button **/

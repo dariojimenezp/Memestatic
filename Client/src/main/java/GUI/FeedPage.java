@@ -213,7 +213,8 @@ public class FeedPage {
                 GUI.createAccountPage();
             });
 
-            root.getChildren().addAll( topBarPadding(), logInButton, new Text("      "), createAccountButton);
+            root.getChildren().addAll( topBarPadding(), new Text("                                                               "), logInButton, new Text("      "), createAccountButton);
+            return root;
         }
 
         else root.getChildren().addAll(topBarPadding(), new Text("                                     "));
@@ -287,7 +288,7 @@ public class FeedPage {
         /* bar */
         MenuBar accountBar = new MenuBar(account);
 
-        root.getChildren().addAll(new Text("                     "), homePane, new Text("   "), createPostPane, new Text("    "), accountBar);
+        root.getChildren().addAll(accountBar);
 
 
         return root;

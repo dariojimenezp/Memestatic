@@ -206,6 +206,7 @@ public class FeedPage {
             /* create account button */
             Button createAccountButton = new Button("Create Account");
             createAccountButton.setId("createAccountButton");
+
             createAccountButton.setOnAction(event -> {
                 closeFeedPage();
                 GUI.createAccountPage();
@@ -804,19 +805,23 @@ public class FeedPage {
         if(user.getPostHistory() == null || user.getPostHistory().isEmpty()) {
             Label noPostsLabel = new Label("No Posts");
             root.getChildren().addAll(noPostsLabel, new Text());
-            return;
+            for (int i = 0; i < 45; i++) {
+                root.getChildren().add(new Text(""));
+            }
         }
 
-        ArrayList<Post> posts = Main.client.findPosts(user.getPostHistory());
+        else {
+            ArrayList<Post> posts = Main.client.findPosts(user.getPostHistory());
 
-        /* add posts */
-        for(Post post : posts){
-            root.getChildren().addAll(post(post), new Text());
-        }
+            /* add posts */
+            for (Post post : posts) {
+                root.getChildren().addAll(post(post), new Text());
+            }
 
-        /* add padding to complete page if there is only one post */
-        if(posts.size() == 1){
-            root.getChildren().addAll(new Text(), new Text(), new Text(), new Text(), new Text());
+            /* add padding to complete page if there is only one post */
+            if (posts.size() == 1) {
+                root.getChildren().addAll(new Text(), new Text(), new Text(), new Text(), new Text());
+            }
         }
 
         /* scroll pane */

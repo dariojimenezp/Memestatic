@@ -695,6 +695,14 @@ public class FeedPage {
         /* add comment button handler */
         addCommentButton.setOnAction(event -> {
 
+            if(user == null){
+                allCommentBox.getChildren().remove(2);
+                Label noTextWarning = new Label("You have to log in to make a comment!");
+                noTextWarning.setId("unsuccessfulLabel");
+                allCommentBox.getChildren().add(2, noTextWarning);
+                return;
+            }
+
             if(commentField.getText().isEmpty()){
                 allCommentBox.getChildren().remove(2);
                 Label noTextWarning = new Label("You have to enter a valid comment!");

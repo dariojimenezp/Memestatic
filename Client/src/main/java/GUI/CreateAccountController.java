@@ -2,6 +2,7 @@ package GUI;
 
 import Client.Main;
 import Hashing.Hashing;
+import ServerClientObjects.User;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -108,8 +109,11 @@ public class CreateAccountController {
         }
 
         /* check if account was created successfully */
-        if(Main.client.wasAccountCreated(username, Hashing.PBKDF2Hash(password, 65000, 64))){
+        String passwordHash = Hashing.PBKDF2Hash(password, 32000, 16);
+        if(Main.client.wasAccountCreated(username, passwordHash)){
+            User user = new User(username, passwordHash);
             closeStage();
+            new FeedPage(user);
             return;
         }
 

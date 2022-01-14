@@ -48,3 +48,7 @@ public class Main extends Application {
 
     }
 }
+
+
+//TODO fix create account
+//TODO: log out

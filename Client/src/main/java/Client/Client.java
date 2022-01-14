@@ -65,19 +65,22 @@ public class Client {
      */
     public Boolean wasAccountCreated(String username, String passwordHash){
 
+        String response = null;
+
         try {
             out.writeInt(3);
             out.writeObject(encryption.Encrypt("create account"));
             out.writeObject(encryption.Encrypt(username));
             out.writeObject(encryption.Encrypt(passwordHash));
+
+             response = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
         }
-        catch (IOException e) { e.printStackTrace(); }
+        catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
-        LinkedList msgs = receiveMsgs();
+        if(response.equals("created account")) return true;
 
-        if(msgs.pop().equals("created account")) return true;
+        return false;
 
-        else return false;
     }
 
     public User logIn(String username, String password){

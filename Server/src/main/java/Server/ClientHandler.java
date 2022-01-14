@@ -106,8 +106,7 @@ public class ClientHandler implements Runnable{
         switch (action){
 
             case "create account":
-
-                createAccount(getStrings(numObjects));
+                createAccount();
                 break;
 
             case "log in":
@@ -156,27 +155,29 @@ public class ClientHandler implements Runnable{
         }
     }
 
-    private void createAccount(LinkedList<String> msgs){
+    private void createAccount(){
 
-        String username = msgs.pop();
-        String passwordHash = msgs.pop();
+        String username = null;
+        String passwordHash = null;
+        try {
+            username = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
+            passwordHash = encryption.Decrypt( (SealedObject) in.readObject(), String.class);
 
-        if(db.findDocument("Users", "username", username) != null){
-            try {
-                out.writeInt(1);
+            /* username has been taken already */
+            if(db.findDocument("Users", "username", username) != null){
                 out.writeObject(encryption.Encrypt("account not created"));
                 return;
             }
-            catch (IOException e) { e.printStackTrace(); }
-        }
 
-        db.addUser(username, passwordHash);
+            /* add user to database */
+            db.addUser(username, passwordHash);
 
-        try {
-            out.writeInt(1);
+            /* notify client */
             out.writeObject(encryption.Encrypt("created account"));
+
         }
-        catch (IOException e) { e.printStackTrace(); }
+
+        catch (IOException | ClassNotFoundException e) {  e.printStackTrace(); }
 
     }
 

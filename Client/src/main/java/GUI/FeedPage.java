@@ -57,7 +57,7 @@ public class FeedPage {
         hasFetched =  false;
         isCommentOpened = false;
         isFeedPageOn = false;
-        isRefresh = false;
+        isRefresh = true;
         this.user = user;
         createFeedPage();
     }
@@ -279,7 +279,7 @@ public class FeedPage {
         logOutMenu.setStyle("-fx-text-fill: #5B49F5; -fx-font-size: 18px;");
         logOutMenu.setOnAction(event -> {
             closeFeedPage();
-            //todo: logout
+            GUI.start();
         });
 
         /* menu */

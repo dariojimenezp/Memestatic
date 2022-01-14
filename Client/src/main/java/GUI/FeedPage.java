@@ -190,7 +190,8 @@ public class FeedPage {
         /* root */
         HBox root = new HBox();
         root.setId("topBarBox");
-        root.getChildren().addAll(logo, memestaticLabel, topBarPadding(), searchPane, new Text(" "), searchField);
+        root.getChildren().addAll(logo, memestaticLabel, topBarPadding(),
+                new Text("                                                      "), searchPane, new Text(" "), searchField);
 
 
         /* if user is not logged in, put log in and create account buttons */
@@ -263,18 +264,30 @@ public class FeedPage {
             createPost();
         });
 
-        /* profile logo */
-        ImageView profileLogo = new ImageView(new Image(String.valueOf(getClass().getResource("/Images/profile.png"))));
-        profileLogo.setFitWidth(35);
-        profileLogo.setFitHeight(35);
-        roundImage(profileLogo, 35, 35);
 
-        //handler todo: profile logo
-        profileLogo.setOnMouseClicked(event -> {
+        /* menu items */
+        MenuItem postHistoryMenu = new MenuItem("Post History");
+        postHistoryMenu.setStyle("-fx-text-fill: #5B49F5; -fx-font-size: 18px;");
+        postHistoryMenu.setOnAction(event -> {
             closeFeedPage();
             createPostHistory();
         });
-        root.getChildren().addAll( homePane, new Text("      "), createPostPane, new Text("      "), profileLogo);
+
+        MenuItem logOutMenu = new MenuItem("Log Out");
+        logOutMenu.setStyle("-fx-text-fill: #5B49F5; -fx-font-size: 18px;");
+        logOutMenu.setOnAction(event -> {
+            closeFeedPage();
+            //todo: logout
+        });
+
+        /* menu */
+        Menu account = new Menu("Account");
+        account.getItems().addAll(postHistoryMenu, logOutMenu);
+
+        /* bar */
+        MenuBar accountBar = new MenuBar(account);
+
+        root.getChildren().addAll(new Text("                     "), homePane, new Text("   "), createPostPane, new Text("    "), accountBar);
 
 
         return root;
@@ -282,7 +295,7 @@ public class FeedPage {
 
 
     private Text topBarPadding(){
-        return new Text("                                                                                                                         ");
+        return new Text("                                                                      ");
     }
 
     private HBox post(Post post){

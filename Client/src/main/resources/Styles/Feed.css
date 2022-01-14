@@ -170,3 +170,14 @@
     -fx-background-color: #5B49F5;
     -fx-background-radius: 35px;
 }
+
+.menu-bar{
+    -fx-background-color:  #5B49F5;
+
+}
+
+.menu{
+    -fx-background-radius: 20px;
+
+}
+

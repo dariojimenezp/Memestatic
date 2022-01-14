@@ -194,31 +194,6 @@ public class FeedPage {
                 new Text("                                                      "), searchPane, new Text(" "), searchField);
 
 
-        /* if user is not logged in, put log in and create account buttons */
-        if(user == null){
-            /* log in button */
-            Button logInButton = new Button("Log In");
-            logInButton.setId("logInButton");
-            logInButton.setOnAction(event -> {
-                closeFeedPage();
-                GUI.logInPage();
-            });
-
-            /* create account button */
-            Button createAccountButton = new Button("Create Account");
-            createAccountButton.setId("createAccountButton");
-
-            createAccountButton.setOnAction(event -> {
-                closeFeedPage();
-                GUI.createAccountPage();
-            });
-
-            root.getChildren().addAll( topBarPadding(), new Text("                                                               "), logInButton, new Text("      "), createAccountButton);
-            return root;
-        }
-
-        else root.getChildren().addAll(topBarPadding(), new Text("                                     "));
-
         /* home button */
         StackPane homePane  = new StackPane();
         ImageView homeButton = new ImageView(new Image(String.valueOf(getClass().getResource("/Images/home.png"))));
@@ -243,6 +218,32 @@ public class FeedPage {
             else stage.close();
             createFeedPage();
         });
+
+        /* if user is not logged in, put log in and create account buttons */
+        if(user == null){
+            /* log in button */
+            Button logInButton = new Button("Log In");
+            logInButton.setId("logInButton");
+            logInButton.setOnAction(event -> {
+                closeFeedPage();
+                GUI.logInPage();
+            });
+
+            /* create account button */
+            Button createAccountButton = new Button("Create Account");
+            createAccountButton.setId("createAccountButton");
+
+            createAccountButton.setOnAction(event -> {
+                closeFeedPage();
+                GUI.createAccountPage();
+            });
+
+            root.getChildren().addAll( topBarPadding(), new Text("                                                 "), homePane, new Text("    "), logInButton, new Text("      "), createAccountButton);
+            return root;
+        }
+
+        else root.getChildren().addAll(topBarPadding(), new Text("                                     "));
+
 
         /* create post */
         StackPane createPostPane  = new StackPane();

@@ -533,6 +533,8 @@ public class FeedPage {
         uploadPicBox.setAlignment(Pos.CENTER);
         uploadPicBox.getChildren().add(uploadPicButton);
 
+        darkenButton(uploadPicButton);
+
 
         uploadPicButton.setOnAction(event -> {
             /* get image path from user */
@@ -570,11 +572,13 @@ public class FeedPage {
         /* button to create the post */
         Button postButton = new Button("Post");
         postButton.setId("createPostButtons");
+        darkenButton(postButton);
 
 
         /* button to cancel the post */
         Button cancelButton = new Button("Cancel");
         cancelButton.setId("createPostButtons");
+        darkenButton(cancelButton);
         cancelButton.setOnAction(event -> {
             isRefresh = true;
             hasFetched = false;
@@ -641,6 +645,12 @@ public class FeedPage {
         return root;
     }
 
+    private void darkenButton(Button button){
+        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #5040db"));
+
+        button.setOnMouseExited(event -> button.setStyle("-fx-background-color: #5B49F5"));
+
+    }
     private HBox createPostPicturePadding(){
 
         HBox root = new HBox();
@@ -692,7 +702,7 @@ public class FeedPage {
         allCommentBox.setAlignment(Pos.CENTER);
         allCommentBox.setId("postBox");
         allCommentBox.getChildren().addAll( new Text(""), addCommentBox, new Text(""), addCommentButton, new Text(""));
-
+        darkenButton(addCommentButton);
         /* add comment button handler */
         addCommentButton.setOnAction(event -> {
 
